@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新-18项核心制度监测指标(临床) - Demo</title>
+  <link rel="stylesheet" href="vendor/element.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; background: #f7f9fa; font-family: -apple-system, "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft YaHei", Arial, sans-serif; color: #303133; }
+    #app { height: 100%; }
+
+    /* ====== 主题色（对齐 custom-element-theme.scss 行 10-13） ====== */
+    :root {
+      --color-primary: #376def;
+      --color-success: #15cd8c;
+      --text-primary: #303133;
+      --text-regular: #606266;
+      --text-secondary: #909399;
+      --border-color: #ebeef5;
+      --table-bg: #f2f4f7;
+      --table-header-bg: #f7f7f7;
+    }
+
+    /* ===== 报表外壳（对齐 CoreKpiClinicalNew 行 367-446） ===== */
+    .report-container { display: flex; flex-direction: column; width: 100%; height: 100%; padding: 16px 20px; overflow-x: auto; border-radius: 30px; box-sizing: border-box; }
+    .scrol-wrap { width: 100%; overflow-x: auto; }
+    .search-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 5px 15px 5px 20px; background: #fff; border-radius: 10px; }
+    .search-container .el-select .el-input__inner { border-radius: 18px; }
+
+    /* ===== tabs（对齐 CurrencyPage 行 2172-2178 + Element 主题色） ===== */
+    .condition { display: flex; align-items: center; }
+    .condition > div { margin-right: 10px; }
+    .condition .el-tabs__header { margin-bottom: 0; }
+    .condition .el-tabs__nav-wrap::after { height: 0; }
+    .el-tabs__item { color: #303133; }
+    .el-tabs__item.is-active { color: #376def; font-weight: 600; }
+    .el-tabs__active-bar { background-color: #376def; }
+
+    /* ===== 按钮组 ===== */
+    .btn-container { display: flex; align-items: center; height: 100%; }
+    .btn-container > * { margin-right: 10px; }
+    .btn-container .el-input__inner::placeholder { color: #999; }
+    .checkbox-item { margin-right: 10px; }
+    .checkbox-item .el-checkbox__label { color: #303133; font-size: 14px; }
+
+    /* 通用 Element primary plain 按钮（custom-element-theme 行 76-81） */
+    .el-button { padding: 5px 14px; font-size: 14px; line-height: 24px; border-radius: 4px; }
+    .el-button.is-round { padding: 5px 14px; border-radius: 20px; }
+    .el-button--primary { color: #fff; background: #376def; border-color: #376def; }
+    .el-button--primary:hover { color: #fff; background: #376def; border-color: #376def; opacity: 0.85; }
+    .el-button--primary.is-plain { color: #376def; background: #fff; border-color: #376def; }
+    .el-button--primary.is-plain:hover { color: #376def; background: rgba(55, 109, 239, 0.12); border-color: #376def; }
+
+    /* 指标设置按钮：蓝描边白底（primary plain） */
+    .table-header-settings, .table-header-settings:focus { color: #376def; background: #fff; border-color: #376def; }
+    .table-header-settings:hover { color: #fff; background: #376def; border-color: #376def; }
+
+    /* 导出按钮：实心绿色（#15cd8c），对齐项目主绿色 */
+    .export-btn, .export-btn:focus { color: #fff; background: #15cd8c; border-color: #15cd8c; }
+    .export-btn:hover { color: #fff; background: #13b67d; border-color: #13b67d; }
+
+    /* ===== 单选 radio（对齐 custom-element-theme 行 28、256-260） ===== */
+    .el-radio { font-size: 14px; color: #333; font-weight: normal; }
+    .el-radio__label { font-size: 14px; padding-left: 8px; }
+    .el-radio__inner { border: 1px solid #606266; background: #fff; }
+    .el-radio__input.is-checked .el-radio__inner { border-color: #376def; background: #376def; }
+    .el-radio__input.is-checked + .el-radio__label { color: #333; }
+    .date-type-radio .el-radio { margin-right: 12px; }
+
+    /* ===== 维度 + 时间选择区 ===== */
+    .select-time { display: flex; align-items: center; margin: 0 12px; flex-shrink: 0; }
+    .select-time .select-lable { margin-right: 6px; }
+    .select-time .select-lable { font-size: 14px; line-height: 19px; font-weight: 400; color: #333; white-space: nowrap; }
+    .select-time .select-time-radio { display: flex; align-items: center; }
+    .select-time .select-time-picker { border-radius: 17px; }
+    .select-time .el-date-editor .el-input__inner { border-radius: 17px; }
+
+    /* ===== 科室下拉（对齐 SelectDept white-theme） ===== */
+    .select-dept-input { width: 160px; }
+    .select-dept-input .el-input__inner { height: 36px; color: #333; background-color: transparent; border-color: #e7eaef; }
+    .select-dept-input .el-input__inner::placeholder { color: #c1c4cb; }
+    .select-dept-input:hover .el-input__inner { border-color: #bbb; }
+
+    .half-select { width: 240px; }
+    .quarter-select { width: 150px; }
+
+    /* ===== 内容区 + 表格基础（对齐 CoreKpiClinicalNew + custom-element-theme 行 361-415） ===== */
+    .content-container { display: flex; flex-direction: column; overflow: hidden; padding: 15px; flex: 1; height: 100%; background: #fff; border-radius: 10px; }
+    .empty-container { display: flex; justify-content: center; align-items: center; height: 200px; color: #909399; }
+    .content-container > .chart-placeholder { display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; min-height: 400px; color: #909399; }
+    .chart-placeholder .ph-title { margin-bottom: 8px; font-size: 15px; color: #606266; }
+
+    .el-table { background: #f2f4f7; font-size: 14px; color: #303133; }
+    .el-table th { padding: 12px 0; color: #333; font-weight: normal; background-color: #f7f7f7; border-bottom: 1px solid #ebeef5; }
+    .el-table th.is-leaf, .el-table td { border-bottom: 1px solid #ebeef5; }
+    .el-table--border th, .el-table--border td { border-right: 1px solid #ebeef5; }
+    .el-table tr { background: #fff; }
+    .el-table--striped .el-table__body tr.el-table__row--striped td { background: #fafbfc; }
+    .el-table__empty-block { min-height: 400px; background: #f2f4f7; }
+    .el-table .cell { word-break: break-word; }
+
+    /* 复刻 new-core-kpi-table 重置 */
+    .new-core-kpi-table .el-table__body td { padding: 0; }
+    .new-core-kpi-table .el-table__body td .cell { padding: 0; height: 100%; }
+    .new-core-kpi-table .dept-cell .cell { display: flex; justify-content: center; align-items: center; }
+    .new-core-kpi-table .dept-cell { font-weight: 600; color: #303133; }
+
+    /* ===== 单元格内三组自定义布局（方案 2+3：制度名+指标名拆双行，列宽加大，加浅底色） ===== */
+    .kpi-name-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 6px 10px; background: #f7f9fa; }
+    .kpi-name-cell .kpi-system { margin-bottom: 2px; font-size: 11px; line-height: 1.4; color: #909399; }
+    .kpi-name-cell .kpi-name { font-size: 13px; line-height: 1.5; color: #303133; word-break: break-all; }
+
+    .name-cell { display: flex; flex-direction: column; height: 100%; }
+    .name-row { display: flex; align-items: center; padding: 0 10px; flex: 1; min-height: 28px; line-height: 1.4; font-size: 12px; color: #666; text-align: left; background: #f7f9fa; }
+    .name-row .row-tag { flex-shrink: 0; margin-right: 6px; padding: 0 4px; font-size: 10px; line-height: 14px; color: #909399; background: #eef0f3; border-radius: 2px; }
+    .name-row + .name-row { border-top: 1px solid #f0f2f5; }
+
+    .value-cell { display: flex; justify-content: center; align-items: stretch; height: 100%; }
+    .kpi-value { display: flex; justify-content: center; align-items: center; padding: 0 10px; min-width: 70px; font-size: 14px; font-weight: 600; color: #303133; white-space: nowrap; }
+    .fzfm { display: flex; flex-direction: column; justify-content: center; min-width: 60px; border-left: 1px dashed #e4e7ed; }
+    .fzfm-row { display: flex; justify-content: center; align-items: center; flex: 1; min-height: 28px; font-size: 12px; color: #666; }
+    .fzfm-row + .fzfm-row { border-top: 1px solid #f0f2f5; }
+
+    /* ===== 指标设置弹窗 ===== */
+    .kpi-dialog .el-dialog__body { padding: 10px 20px 20px; }
+    .kpi-check-all { padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1px solid #ebeef2; }
+    .kpi-check-list { max-height: 380px; overflow-y: auto; }
+    .kpi-check-list .el-checkbox { display: flex; align-items: flex-start; margin: 0 0 10px; padding: 4px 0; white-space: normal; }
+    .kpi-check-list .el-checkbox__label { line-height: 1.5; font-size: 13px; }
+    .kpi-check-list .kpi-system { color: #909399; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="report-container">
+      <div class="scrol-wrap">
+        <div class="search-container">
+          <div class="condition">
+            <el-tabs v-model="activeTabs" tab-position="top">
+              <el-tab-pane v-for="item in tabs" :key="item.id" :label="item.label" :name="item.id"></el-tab-pane>
+            </el-tabs>
+          </div>
+
+          <div class="btn-container">
+            <el-checkbox
+              v-if="activeTabs === '0'"
+              v-model="showMore"
+              class="checkbox-item"
+              label=""
+              :true-label="1"
+              :false-label="0"
+              :indeterminate="false"
+            >
+              展示对比
+            </el-checkbox>
+
+            <div v-show="activeTabs === '0'" class="select-time">
+              <span class="select-lable">维度：</span>
+              <el-radio-group v-model="dateType" class="select-time-radio" @change="handleDateTypeChange">
+                <el-radio v-for="item in dateTypeOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
+              </el-radio-group>
+
+              <div>
+                <el-date-picker
+                  v-if="dateType === '月' || dateType === '总计'"
+                  v-model="monthRange"
+                  class="select-time-picker"
+                  style="width: 240px"
+                  type="monthrange"
+                  range-separator="-"
+                  format="yyyy 年 MM 月"
+                  value-format="yyyy-MM"
+                  start-placeholder="开始月份"
+                  end-placeholder="结束月份"
+                  :clearable="false"
+                  :picker-options="monthPickerOptions"
+                ></el-date-picker>
+
+                <template v-if="dateType === '季度'">
+                  <el-select v-model="quarterStart" class="quarter-select" placeholder="开始季度">
+                    <el-option v-for="item in quarterOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                  <span style="margin: 0 4px; color: #606266">-</span>
+                  <el-select v-model="quarterEnd" class="quarter-select" placeholder="结束季度">
+                    <el-option v-for="item in quarterOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </template>
+
+                <el-select
+                  v-if="dateType === '半年'"
+                  v-model="halfList"
+                  class="half-select"
+                  multiple
+                  collapse-tags
+                  placeholder="请选择半年"
+                >
+                  <el-option v-for="item in halfOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+
+                <template v-if="dateType === '年'">
+                  <el-date-picker
+                    v-model="yearStart"
+                    class="select-time-picker"
+                    style="width: 120px"
+                    type="year"
+                    format="yyyy 年"
+                    value-format="yyyy"
+                    placeholder="开始年份"
+                    :clearable="false"
+                    :picker-options="yearPickerOptions"
+                  ></el-date-picker>
+                  <span style="margin: 0 4px; color: #606266">-</span>
+                  <el-date-picker
+                    v-model="yearEnd"
+                    class="select-time-picker"
+                    style="width: 120px"
+                    type="year"
+                    format="yyyy 年"
+                    value-format="yyyy"
+                    placeholder="结束年份"
+                    :clearable="false"
+                    :picker-options="yearPickerOptions"
+                  ></el-date-picker>
+                </template>
+              </div>
+            </div>
+
+            <el-date-picker
+              v-show="activeTabs === '1'"
+              v-model="year"
+              class="select-time-picker"
+              style="width: 140px"
+              type="year"
+              format="yyyy 年"
+              value-format="yyyy"
+              placeholder="请选择年"
+              :clearable="false"
+              :picker-options="yearPickerOptions"
+            ></el-date-picker>
+
+            <el-select v-model="deptCode" class="select-dept-input" placeholder="请选择科室">
+              <el-option v-for="item in deptList" :key="item.deptCode" :label="item.deptName" :value="item.deptCode"></el-option>
+            </el-select>
+
+            <el-button
+              class="table-header-settings"
+              type="primary"
+              size="default"
+              plain
+              round
+              @click="openKpiDialog"
+            >
+              指标设置
+            </el-button>
+
+            <el-button
+              class="export-btn"
+              type="primary"
+              size="default"
+              round
+              plain
+              @click="handleExport"
+            >
+              {{ activeTabs === '0' ? '导出数据' : '导出趋势图' }}
+            </el-button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-container">
+        <el-table
+          v-if="activeTabs === '0'"
+          :key="tableKey"
+          border
+          stripe
+          height="100%"
+          class="new-core-kpi-table"
+          :data="tableRows"
+          :span-method="spanMethod"
+        >
+          <el-table-column prop="deptName" label="出院科室" class-name="dept-cell" align="center" width="130"></el-table-column>
+
+          <el-table-column label="指标" align="center">
+            <el-table-column label="指标" align="left" min-width="280">
+              <template slot-scope="{ row }">
+                <div class="kpi-name-cell">
+                  <div class="kpi-name">{{ row.kpiName }}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="分子/分母" align="center" min-width="280">
+              <template slot-scope="{ row }">
+                <div class="name-cell">
+                  <div class="name-row">
+                    <span class="row-tag">分子</span>
+                    <span :title="row.fzKpiName">{{ row.fzKpiName || '-' }}</span>
+                  </div>
+                  <div class="name-row">
+                    <span class="row-tag">分母</span>
+                    <span :title="row.fmKpiName">{{ row.fmKpiName || '-' }}</span>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+
+          <el-table-column
+            v-for="col in dateColumns"
+            :key="col.key"
+            :label="col.title"
+            align="center"
+            min-width="160"
+          >
+            <template slot-scope="{ row }">
+              <div class="value-cell">
+                <div class="kpi-value">{{ row[col.field].value }}</div>
+                <div class="fzfm">
+                  <div class="fzfm-row">{{ row[col.field].fz }}</div>
+                  <div class="fzfm-row">{{ row[col.field].fm }}</div>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+
+          <template slot="empty">
+            <div class="empty-container">暂无数据</div>
+          </template>
+        </el-table>
+
+        <div v-else class="chart-placeholder">
+          <div class="ph-title">趋势图（Demo 演示区域）</div>
+          <div>当前科室：{{ selectedDept ? selectedDept.deptName : '-' }} ｜ 年份：{{ year || '-' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <el-dialog
+      class="kpi-dialog"
+      title="指标设置"
+      :visible.sync="kpiDialogVisible"
+      width="560px"
+      :close-on-click-modal="false"
+      append-to-body
+      @open="onKpiDialogOpen"
+    >
+      <div class="kpi-dialog-body">
+        <div class="kpi-check-all">
+          <el-checkbox
+            :indeterminate="kpiIndeterminate"
+            v-model="kpiAllChecked"
+            @change="onKpiAllChange"
+          >
+            全选（{{ kpiSelected.length }} / {{ kpiOptions.length }}）
+          </el-checkbox>
+        </div>
+        <div class="kpi-check-list">
+          <el-checkbox-group v-model="kpiSelectedList">
+            <el-checkbox
+              v-for="kpi in kpiOptions"
+              :key="kpi.kpiCode"
+              :label="kpi.kpiCode"
+              @change="onKpiItemChange"
+            >
+              <span class="kpi-system">[{{ kpi.systemName }}]</span> {{ kpi.kpiName }}
+            </el-checkbox>
+          </el-checkbox-group>
+        </div>
+      </div>
+      <span slot="footer">
+        <el-button @click="kpiDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmKpi">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+
+  <script src="vendor/vue.min.js"></script>
+  <script src="vendor/element.js"></script>
+  <script src="mockData.js"></script>
+  <script>
+    const currentYear = MockData.DATE_MAX.year
+    const currentMaxMonth = MockData.toMonthStr(currentYear, MockData.DATE_MAX.month)
+    const halfOptions = MockData.getHalfOptions()
+    const quarterOptions = []
+    for (let year = MockData.DATE_MIN.year; year <= MockData.DATE_MAX.year; year += 1) {
+      const maxQ = year === MockData.DATE_MAX.year ? Math.ceil(MockData.DATE_MAX.month / 3) : 4
+      for (let quarter = 1; quarter <= maxQ; quarter += 1) {
+        quarterOptions.push({ label: `${year}年第${quarter}季度`, value: `${year}-${quarter}` })
+      }
+    }
+
+    new Vue({
+      el: '#app',
+
+      data() {
+        return {
+          activeTabs: '0',
+          tabs: [
+            { id: '0', label: '统计表' },
+            { id: '1', label: '趋势图' }
+          ],
+          showMore: 0,
+
+          deptList: MockData.deptList,
+          deptCode: MockData.deptList[0].deptCode,
+          dateTypeOptions: [
+            { label: '月', value: '月' },
+            { label: '季', value: '季度' },
+            { label: '半年', value: '半年' },
+            { label: '年', value: '年' },
+            { label: '总计', value: '总计' }
+          ],
+          dateType: '月',
+          monthRange: [`${currentYear}-01`, currentMaxMonth],
+          quarterOptions,
+          quarterStart: `${currentYear}-1`,
+          quarterEnd: `${currentYear}-${Math.ceil(MockData.DATE_MAX.month / 3)}`,
+          halfOptions,
+          halfList: halfOptions
+            .filter((item) => item.value.startsWith(`${currentYear}-`))
+            .map((item) => item.value),
+          yearStart: `${currentYear}`,
+          yearEnd: `${currentYear}`,
+          year: `${currentYear}`,
+          monthPickerOptions: {
+            disabledDate: (time) => {
+              return (
+                time.getTime() > new Date(`${currentMaxMonth}-01`) ||
+                time.getTime() < new Date(`${MockData.toMonthStr(MockData.DATE_MIN.year, MockData.DATE_MIN.month)}-01`)
+              )
+            }
+          },
+          yearPickerOptions: {
+            disabledDate: (time) => {
+              const year = time.getFullYear()
+              return year > MockData.DATE_MAX.year || year < MockData.DATE_MIN.year
+            }
+          },
+
+          // 指标设置
+          kpiOptions: MockData.kpiList,
+          kpiSelectedList: [],
+          kpiCommitted: [],
+          kpiDialogVisible: false,
+          kpiAllChecked: false,
+          kpiIndeterminate: false
+        }
+      },
+
+      computed: {
+        selectedDept() {
+          return this.deptList.find((item) => item.deptCode === this.deptCode)
+        },
+
+        visibleKpis() {
+          return this.kpiOptions.filter((k) => this.kpiCommitted.includes(k.kpiCode))
+        },
+
+        kpiSelected() {
+          return this.kpiSelectedList
+        },
+
+        selectedMonths() {
+          if (this.dateType === '月' || this.dateType === '总计') {
+            if (!this.monthRange || this.monthRange.length !== 2) return []
+            return MockData.getExpandedMonths(this.monthRange[0], this.monthRange[1])
+          }
+          if (this.dateType === '季度') {
+            if (!this.quarterStart || !this.quarterEnd) return []
+            const [startYear, startQuarter] = this.quarterStart.split('-').map(Number)
+            const [endYear, endQuarter] = this.quarterEnd.split('-').map(Number)
+            const start = MockData.toMonthStr(startYear, (startQuarter - 1) * 3 + 1)
+            const end = MockData.toMonthStr(endYear, endQuarter * 3)
+            return MockData.getExpandedMonths(start, end)
+          }
+          if (this.dateType === '半年') {
+            return [...this.halfList]
+              .sort()
+              .flatMap((halfValue) => MockData.getHalfMonths(halfValue))
+          }
+          if (this.dateType === '年') {
+            if (!this.yearStart || !this.yearEnd) return []
+            return MockData.getExpandedMonths(`${this.yearStart}-01`, `${this.yearEnd}-12`)
+          }
+          return []
+        },
+
+        dateColumns() {
+          let groups = []
+          if (this.dateType === '月') {
+            groups = this.selectedMonths.map((month) => ({
+              key: month,
+              title: MockData.getMonthLabel(month),
+              months: [month]
+            }))
+          } else if (this.dateType === '季度') {
+            groups = MockData.groupMonthsByQuarter(this.selectedMonths)
+          } else if (this.dateType === '半年') {
+            groups = MockData.groupMonthsByHalf(this.selectedMonths)
+          } else if (this.dateType === '年') {
+            groups = MockData.groupMonthsByYear(this.selectedMonths)
+          } else if (this.dateType === '总计') {
+            groups = [{ key: 'all', title: '总计', months: this.selectedMonths }]
+          }
+          return groups.map((group, index) => ({
+            key: group.key,
+            field: `dateValue${index}`,
+            title: group.title,
+            months: group.months
+          }))
+        },
+
+        tableRows() {
+          return this.visibleKpis.map((kpi) => {
+            const row = {
+              ...kpi,
+              deptName: this.selectedDept ? this.selectedDept.deptName : ''
+            }
+            this.dateColumns.forEach((col) => {
+              row[col.field] = MockData.getCellData(kpi, this.deptCode, col.months)
+            })
+            return row
+          })
+        },
+
+        tableKey() {
+          return this.dateColumns.map((col) => col.key).join(',') + '|' + this.kpiCommitted.join(',')
+        }
+      },
+
+      watch: {
+        // 任何 kpiCommitted 变化都要重算
+        kpiCommitted() {
+          // no-op, 占位确保依赖更新
+        }
+      },
+
+      created() {
+        // 默认勾选全部指标
+        this.kpiCommitted = this.kpiOptions.map((k) => k.kpiCode)
+      },
+
+      methods: {
+        spanMethod({ rowIndex, columnIndex }) {
+          if (columnIndex === 0) {
+            if (rowIndex === 0) {
+              return [this.tableRows.length, 1]
+            }
+            return [0, 0]
+          }
+        },
+
+        handleDateTypeChange() {
+          if (this.dateType === '月' || this.dateType === '总计') {
+            this.monthRange = [`${currentYear}-01`, currentMaxMonth]
+          } else if (this.dateType === '季度') {
+            this.quarterStart = `${currentYear}-1`
+            this.quarterEnd = `${currentYear}-${Math.ceil(MockData.DATE_MAX.month / 3)}`
+          } else if (this.dateType === '半年') {
+            this.halfList = this.halfOptions
+              .filter((item) => item.value.startsWith(`${currentYear}-`))
+              .map((item) => item.value)
+          } else if (this.dateType === '年') {
+            this.yearStart = `${currentYear}`
+            this.yearEnd = `${currentYear}`
+          }
+        },
+
+        openKpiDialog() {
+          // 用当前提交状态初始化 dialog 内勾选
+          this.kpiSelectedList = [...this.kpiCommitted]
+          this.syncKpiAllState()
+          this.kpiDialogVisible = true
+        },
+
+        onKpiDialogOpen() {
+          this.syncKpiAllState()
+        },
+
+        onKpiAllChange(val) {
+          this.kpiSelectedList = val ? this.kpiOptions.map((k) => k.kpiCode) : []
+          this.kpiIndeterminate = false
+        },
+
+        onKpiItemChange() {
+          this.syncKpiAllState()
+        },
+
+        syncKpiAllState() {
+          const total = this.kpiOptions.length
+          const checked = this.kpiSelected.length
+          this.kpiAllChecked = total > 0 && checked === total
+          this.kpiIndeterminate = checked > 0 && checked < total
+        },
+
+        confirmKpi() {
+          this.kpiCommitted = this.kpiSelected
+          this.kpiDialogVisible = false
+        },
+
+        handleExport() {
+          this.$message.warning('导出功能待开发')
+        }
+      }
+    })
+  </script>
+</body>
+</html>
