@@ -56,9 +56,10 @@
     .table-header-settings, .table-header-settings:focus { color: #376def; background: #fff; border-color: #376def; }
     .table-header-settings:hover { color: #fff; background: #376def; border-color: #376def; }
 
-    /* 导出按钮：实心绿色（#15cd8c），对齐项目主绿色 */
-    .export-btn, .export-btn:focus { color: #fff; background: #15cd8c; border-color: #15cd8c; }
-    .export-btn:hover { color: #fff; background: #13b67d; border-color: #13b67d; }
+    /* 导出按钮：实心绿色（#15cd8c），对齐项目主绿色
+     * 需带 .is-plain 选择器以覆盖 .el-button--primary.is-plain:hover 的高优先级蓝样式 */
+    .export-btn, .export-btn.is-plain, .export-btn:focus { color: #fff; background: #15cd8c; border-color: #15cd8c; }
+    .export-btn:hover, .export-btn.is-plain:hover { color: #fff; background: #13b67d; border-color: #13b67d; }
 
     /* ===== 单选 radio（对齐 custom-element-theme 行 28、256-260） ===== */
     .el-radio { font-size: 14px; color: #333; font-weight: normal; }
@@ -106,13 +107,15 @@
     .new-core-kpi-table .dept-cell .cell { display: flex; justify-content: center; align-items: center; }
     .new-core-kpi-table .dept-cell { font-weight: 600; color: #303133; }
 
-    /* ===== 单元格内三组自定义布局（方案 2+3：制度名+指标名拆双行，列宽加大，加浅底色） ===== */
-    .kpi-name-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 6px 10px; background: #f7f9fa; }
+    /* ===== 单元格内三组自定义布局（方案 2+3：制度名+指标名拆双行，列宽加大，加浅底色） =====
+     * 注意:不要给包装层设背景色，否则会盖住 td 的斑马纹背景，导致隔行颜色不对称。
+     * 让 td 的 stripe 颜色直接透出来，整行颜色统一。 */
+    .kpi-name-cell { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 6px 10px; background: transparent; }
     .kpi-name-cell .kpi-system { margin-bottom: 2px; font-size: 11px; line-height: 1.4; color: #909399; }
     .kpi-name-cell .kpi-name { font-size: 13px; line-height: 1.5; color: #303133; word-break: break-all; }
 
     .name-cell { display: flex; flex-direction: column; height: 100%; }
-    .name-row { display: flex; align-items: center; padding: 0 10px; flex: 1; min-height: 28px; line-height: 1.4; font-size: 12px; color: #666; text-align: left; background: #f7f9fa; }
+    .name-row { display: flex; align-items: center; padding: 0 10px; flex: 1; min-height: 28px; line-height: 1.4; font-size: 12px; color: #666; text-align: left; background: transparent; }
     .name-row .row-tag { flex-shrink: 0; margin-right: 6px; padding: 0 4px; font-size: 10px; line-height: 14px; color: #909399; background: #eef0f3; border-radius: 2px; }
     .name-row + .name-row { border-top: 1px solid #f0f2f5; }
 
