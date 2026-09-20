@@ -1,0 +1,38 @@
+<svg id="组_42026" data-name="组 42026" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: none;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #fff;
+        stroke-width: 1.2px;
+      }
+
+      .cls-1 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .cls-4 {
+        stroke: none;
+      }
+    </style>
+  </defs>
+  <g id="组_40427" data-name="组 40427" transform="translate(1 1)">
+    <g id="椭圆_688" data-name="椭圆 688" class="cls-1" transform="translate(0 0)">
+      <circle class="cls-4" cx="10" cy="10" r="10"/>
+      <circle class="cls-3" cx="10" cy="10" r="9.4"/>
+    </g>
+    <g id="组_40426" data-name="组 40426" transform="translate(5.555 4.454)">
+      <circle id="椭圆_689" data-name="椭圆 689" class="cls-2" cx="2.778" cy="2.778" r="2.778" transform="translate(1.667)"/>
+      <path id="路径_7491" data-name="路径 7491" class="cls-2" d="M-57.722,93.45c0,2.455-1.99,0-4.445,0s-4.444,2.455-4.444,0a4.444,4.444,0,0,1,4.444-4.444A4.444,4.444,0,0,1-57.722,93.45Z" transform="translate(66.611 -83.45)"/>
+    </g>
+  </g>
+  <rect id="矩形_29234" data-name="矩形 29234" class="cls-3" width="22" height="22"/>
+</svg>
