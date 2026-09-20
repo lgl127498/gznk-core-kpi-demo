@@ -410,7 +410,11 @@
     .period-controls .el-input__icon { color:#fff; }
     .overview-theme-popper-class { border-radius:10px; }
     .no-data { min-height:100px;display:grid;place-content:center;color:#8291a5;font-size:13px; }
-  </style>
+  
+.critical-primary{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:14px 0 18px;margin-bottom:14px;border-bottom:1px solid #d7e3f0}
+.critical-primary>div{display:flex;gap:7px;align-items:baseline}.critical-primary b{font-size:38px;line-height:1.2;font-weight:600;color:#376def;font-variant-numeric:tabular-nums}.critical-primary span{font-size:13px;color:#7387a1}.critical-primary small{font-size:12px;color:#8a9cb1}.critical-breakdown-label{font-size:12px;color:#6d839e;margin:0 0 10px}
+.coverage-label{display:grid;grid-template-columns:1fr 1fr;gap:16px;line-height:1.7}.coverage-label span{min-width:0;white-space:normal;overflow-wrap:anywhere}
+</style>
 </head>
 <body>
   <div id="app" v-cloak>
@@ -435,7 +439,7 @@
 
     <main>
       <section class="overview-context" aria-label="当前分析范围">
-        <div class="scope-title"><strong>全院分析</strong><span>35 项指标 · 全院 · 演示数据</span><small>每月22日更新，节假日可能延后三天 · 时间筛选用于模拟交互，非真实医院统计</small></div>
+        <div class="scope-title"><strong>全院分析</strong><span>35 项指标 · 全院</span><small>每月22日更新，节假日可能延后三天</small></div>
         <div class="period-controls"><span>时间范围</span><el-cascader v-model="selMonths" @change="selectPeriod" size="medium" collapse-tags clearable :props="{ multiple: true, emitPath: false }" :options="monthsOptions" :visible-arrow="false" popper-class="overview-theme-popper-class" placeholder="选择年 / 季度 / 月份" /></div>
       </section>
       <section class="overview-strip" aria-label="概览摘要">
@@ -463,14 +467,15 @@
             <div class="badge-row"><span class="direction" :class="kpi.direction">{{ directionText(kpi.direction) }}</span><span v-if="kpi.status === 'offline'" class="status offline">未上线</span></div>
 
             <template v-if="kpi.status === 'offline'"><div class="offline-visual"><span>暂未上线</span><i></i><i></i><i></i></div></template>
-            <div v-else-if="!hasFullPeriod()" class="no-data">所选时段暂无该指标演示数据</div>
+            <div v-else-if="!hasFullPeriod()" class="no-data">所选时段暂无该指标数据</div>
             <template v-else-if="kpi.type === 'multi-value'">
+<div class="critical-primary"><div><b>{{Number.isFinite(kpi.value)?kpi.value:'—'}}</b><span>分钟</span></div></div><div class="critical-breakdown-label">分场景报告时间（中位数）</div>
               <div class="response-visual"><div v-for="(value, label) in kpi.subValues" :key="label" class="response-row"><span>{{ label }}</span><div class="response-track"><i :style="{ width: responseWidth(value) }"></i></div><b>{{ value }}<small> min</small></b></div></div>
               <div class="visual-note">三类就诊场景报告时效（中位数）</div>
             </template>
             <template v-else-if="kpi.type === 'fraction'">
-              <div class="coverage-value"><b>{{ displayValue(kpi) }}</b><span>%</span><em>{{ kpi.num }} / {{ kpi.den }}</em></div>
-              <div class="coverage-track"><i :style="{ width: displayValue(kpi) + '%' }"></i></div>
+              <div class="coverage-value"><b>{{ displayValue(kpi) }}</b><span>{{kpi.unit}}</span><em>{{ kpi.num }} / {{ kpi.den }}</em></div>
+              <div v-if="kpi.unit!==''" class="coverage-track"><i :style="{ width: displayValue(kpi) + '%' }"></i></div>
               <div class="coverage-label"><span>{{ fractionLabels(kpi)[0] }} {{ kpi.num }}</span><span>{{ fractionLabels(kpi)[1] }} {{ kpi.den }}</span></div>
             </template>
             <template v-else-if="kpi.type === 'ratio'">
@@ -543,10 +548,10 @@
         regularIndicators: function (module) { var self = this; return module.indicatorCodes.map(function (code) { return self.indicators[code] }).filter(function (item) { return item && item.type !== 'bar-supplement' }) },
         moduleDescription: function (id) { return ['住院收治、查房、护理与交接查对执行情况', '会诊响应、急危重抢救及危急值闭环管理', '疑难病例与死亡病例讨论质量', '术前讨论、手术安全及分级管理质量', '抗菌药物、临床用血与新技术准入管理'][id - 1] },
         directionText: function (direction) { return direction === 'positive' ? '↑ 越高越好' : direction === 'negative' ? '↓ 越低越好' : '↔ 监测比较' },
-        displayValue: function (kpi) { return kpi.value === null || kpi.value === undefined ? '--' : (kpi.type === 'ratio' ? Number(kpi.value).toFixed(2) : Number(kpi.value).toFixed(1)) },
+        displayValue: function (kpi) { return kpi.value === null || kpi.value === undefined ? '--' : (kpi.unit === '' ? Number(kpi.value).toFixed(3) : kpi.type === 'ratio' ? Number(kpi.value).toFixed(2) : Number(kpi.value).toFixed(1)) },
         unitOf: function (kpi) { return kpi.type === 'ratio' ? '倍' : '%' },
         signed: function (value) { return Number.isFinite(value) ? (value > 0 ? '+' : '') + value.toFixed(1) + ' 个百分点' : '—' },
-        fractionLabels: function(kpi) { return ({ swbltl5rwcl: ['5日内讨论病例','死亡病例总数'], ywbmzztldswblyfsjfdswblbz: ['医务组织讨论病例','发生纠纷死亡病例'], kzrzcswbltll: ['科主任主持病例','死亡病例总数'], swhzbascl: ['病案上传数','死亡患者总数'] })[kpi.code] },
+        fractionLabels: function(kpi) { return [kpi.numeratorLabel, kpi.denominatorLabel] },
         changePeriod: function(source) {
           if(this.startMonth > this.endMonth) { if(source === 'start') this.endMonth = this.startMonth; else this.startMonth = this.endMonth }
           // Demo-only period snapshots; never interpreted as actual hospital observations.
@@ -554,7 +559,8 @@
           Object.keys(window.indicators).forEach(function(code) {
             var k = JSON.parse(JSON.stringify(window.indicators[code]));
             if(k.status === 'online' && (offset !== 0 || share !== 1)) {
-              if(k.type === 'fraction') { k.den = Math.max(1,Math.round(k.den*share)); k.num = Math.round(k.den*Math.min(100,Math.max(0,k.value+offset))/100); k.value = k.num/k.den*100 }
+              if(k.type === 'fraction' && k.unit === '') { k.den = Math.max(1,Math.round(k.den*share)); k.num = Math.round(k.den*k.value); k.value = +(k.num/k.den).toFixed(3) }
+              else if(k.type === 'fraction') { k.den = Math.max(1,Math.round(k.den*share)); k.num = Math.round(k.den*Math.min(100,Math.max(0,k.value+offset))/100); k.value = k.num/k.den*100 }
               else if(k.type === 'ratio') { Object.keys(k.subValues).forEach(function(key,i){k.subValues[key] = +(k.subValues[key]*(1+offset*(i+1)/10)).toFixed(2)}); var rates=Object.values(k.subValues); k.value=rates[0]/rates[1] }
               else if(k.type === 'multi-value') { Object.keys(k.subValues).forEach(function(key){ k.subValues[key] = +(k.subValues[key]*(1-offset/10)).toFixed(1) }) }
               else if(typeof k.value === 'number') k.value = Math.min(100, Math.max(0,k.value+offset*(k.direction === 'negative' ? -1 : 1)))
@@ -598,13 +604,13 @@
           var start=this.startMonth-1, end=this.endMonth
           volume.setOption({xAxis:{data:window.supplementBarData.months.slice(start,end)},series:window.supplementBarData.series.map(function(s){return {data:s.data.slice(start,end)}})})
           trend.setOption({xAxis:{data:window.trendData.months.slice(start,end)},series:trendSeries.map(function(s){return {data:s.data.slice(start,end)}})})
-          if(start !== 0 || end !== 8) ranking.setOption({graphic:[{type:'rect',left:0,top:0,shape:{width:2000,height:400},style:{fill:'#fff'},z:100},{type:'text',left:'center',top:'middle',style:{text:'所选时段暂无科室排名演示数据',fill:'#64748b',font:'14px sans-serif'},z:101}]})
+          if(start !== 0 || end !== 8) ranking.setOption({graphic:[{type:'rect',left:0,top:0,shape:{width:2000,height:400},style:{fill:'#fff'},z:100},{type:'text',left:'center',top:'middle',style:{text:'所选时段暂无科室排名数据',fill:'#64748b',font:'14px sans-serif'},z:101}]})
           this.charts = [volume, ranking, trend]
           var chosen=this.selMonths;
           var filter=function(data){return data.filter(function(v,i){return chosen.includes(window.demoAllMonths[i])})};
           volume.setOption({xAxis:{data:filter(window.supplementBarData.months)},series:window.supplementBarData.series.map(function(s){return {data:filter(s.data)}})});
           trend.setOption({xAxis:{data:filter(window.trendData.months)},series:trendSeries.map(function(s){return {data:filter(s.data)}})});
-          if(!this.hasFullPeriod()) ranking.setOption({graphic:[{type:'rect',left:0,top:0,shape:{width:2000,height:400},style:{fill:'#fff'},z:100},{type:'text',left:'center',top:'middle',style:{text:'所选时段暂无科室排名演示数据',fill:'#64748b',font:'14px sans-serif'},z:101}]});
+          if(!this.hasFullPeriod()) ranking.setOption({graphic:[{type:'rect',left:0,top:0,shape:{width:2000,height:400},style:{fill:'#fff'},z:100},{type:'text',left:'center',top:'middle',style:{text:'所选时段暂无科室排名数据',fill:'#64748b',font:'14px sans-serif'},z:101}]});
         }
       }
     })
