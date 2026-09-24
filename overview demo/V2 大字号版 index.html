@@ -478,14 +478,14 @@ body{min-width:1000px}.overview-context{display:grid;grid-template-columns:minma
 .discussion-track i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#3d77ef,#2cc4dc)}
 .discussion-track em{position:absolute;top:50%;width:14px;height:14px;border:2px solid #fff;border-radius:50%;background:#376def;box-shadow:0 0 0 1px #376def;transform:translate(-50%,-50%)}
 .discussion-metric .delta-row{display:flex;gap:8px 18px;margin:12px 0 0 42px;font-size:14px}
-.death-row{display:grid;grid-template-columns:minmax(170px,1.1fr) minmax(260px,1.3fr) 96px;gap:16px;align-items:center;padding:17px 0;border-bottom:1px solid #e7edf7}
+.death-row{display:grid;grid-template-columns:minmax(170px,1.1fr) 120px minmax(260px,1.3fr);gap:16px;align-items:center;padding:17px 0;border-bottom:1px solid #e7edf7}
 .death-row:last-child{border-bottom:0;padding-bottom:0}
 .death-row button{font-size:16px;font-weight:600}
 .death-fraction{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);gap:9px;align-items:start;min-width:0}
 .death-fraction>span{min-width:0;color:#355a8e;font-size:25px;font-weight:700}
 .death-fraction small{display:block;margin-top:3px;color:#7388a2;font-size:12px;font-weight:400;line-height:1.4;overflow-wrap:anywhere}
 .death-fraction>b{color:#9eafc6;font-size:24px;font-weight:400}
-.death-row>strong{justify-self:end;color:#2a5aad;font-size:29px;white-space:nowrap}
+.death-row>strong{justify-self:start;color:#2a5aad;font-size:29px;white-space:nowrap}
 .module-empty{padding:75px 24px;border:1px solid #e1eaf7;border-radius:10px;background:#fff;color:#8291a5;text-align:center;font-size:18px}
 /* 术前讨论四项沿用原卡片；下方左为两项风险比，右侧先正向后负向。 */
 .board-4{grid-template-columns:repeat(12,minmax(0,1fr));gap:0}
@@ -516,8 +516,8 @@ body{min-width:1000px}.overview-context{display:grid;grid-template-columns:minma
 .surgery-quality-item.negative>strong{color:#ae7140}
 .surgery-quality-item.negative .surgery-line i{background:#d69645}
 .surgery-quality-item .delta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:14px;font-size:14px}
-@media(max-width:1450px){.discussion-layout-v2,.surgery-bottom{grid-template-columns:1fr}.discussion-left,.discussion-right{padding:24px}.death-row{grid-template-columns:minmax(180px,1.1fr) minmax(270px,1.4fr) 100px}}
-@media(max-width:1100px){.board-4>.procedure-card{grid-column:span 6}.surgery-quality-grid{grid-template-columns:1fr 1fr}.death-row{grid-template-columns:minmax(150px,1fr) minmax(240px,1.3fr) 90px}}
+@media(max-width:1450px){.discussion-layout-v2,.surgery-bottom{grid-template-columns:1fr}.discussion-left,.discussion-right{padding:24px}.death-row{grid-template-columns:minmax(180px,1.1fr) 120px minmax(270px,1.4fr)}}
+@media(max-width:1100px){.board-4>.procedure-card{grid-column:span 6}.surgery-quality-grid{grid-template-columns:1fr 1fr}.death-row{grid-template-columns:minmax(150px,1fr) 110px minmax(240px,1.3fr)}}
 /* V4 固定顶栏：仅增加 V2 所需的单选科室，移除对比基准和图例行。 */
 .project-header{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 28px;border:0;background:#376def;box-shadow:none;backdrop-filter:none}
 .project-brand{gap:10px;font-size:21px;letter-spacing:0;white-space:nowrap}
@@ -635,6 +635,23 @@ h2{font-size:26px;line-height:1.45}
 .side-nav:hover,.side-nav:focus-within{width:185px}
 .side-nav:hover .nav-dot,.side-nav:focus-within .nav-dot{width:183px}
 @media(max-width:1350px){.board-1 .visual-ring .metric-reading,.board-5 .metric-reading{grid-template-columns:132px minmax(0,1fr)}.board-1 .visual-ring .reading-ring,.board-5 .reading-ring{width:132px;height:132px}.board-1 .visual-ring .reading-ring::after,.board-5 .reading-ring::after{width:108px;height:108px}.board-1 .visual-ring .reading-ring div,.board-5 .reading-ring div{width:108px}.board-1 .visual-ring .reading-ring b,.board-5 .reading-ring b{font-size:31px}.board-1 .visual-ring .reading-ring small,.board-5 .reading-ring small{font-size:17px}}
+/* 大字号下压缩报告时间行距，保持文字大小不变。 */
+.board-2 .visual-response{padding:20px 24px}
+.board-2 .visual-response .visual-heading{min-height:72px}
+.board-2 .critical-primary{margin:0 0 10px;padding:0 0 10px}
+.board-2 .critical-breakdown-label{margin:0 0 6px}
+.board-2 .response-visual{flex:0 0 auto;grid-template-rows:repeat(3,90px);gap:0;margin-top:4px}
+.board-2 .response-row{min-height:90px;padding:8px 0;gap:4px 10px}
+.board-2 .response-row .response-track{height:9px}
+.board-2 .metric-visual:not(.visual-response){min-height:222px;padding:18px 20px}
+.board-2 .metric-visual:not(.visual-response) .coverage-value{margin-top:8px}
+.board-2 .metric-visual:not(.visual-response) .segment-meter{margin:12px 0 8px}
+.board-2 .metric-visual:not(.visual-response) .delta-row{margin-top:8px}
+.visual-heading .kpi-name,.discussion-metric-head button,.death-row button,.surgery-ratio-head button,.surgery-quality-item button{cursor:help}
+.discussion-metric-head button,.death-row button{justify-self:start}
+.surgery-quality-item button{align-self:flex-start;min-height:0}
+@media(max-width:1250px){.board-2 .response-visual{grid-template-rows:auto;gap:12px}.board-2 .response-row{min-height:90px}}
+@media(max-width:700px){.death-row{grid-template-columns:110px minmax(0,1fr)}.death-row button{grid-column:1/-1}.death-fraction{grid-column:2}}
 </style>
 </head>
 <body>
@@ -662,7 +679,7 @@ h2{font-size:26px;line-height:1.45}
     <main>
       <section class="overview-context" aria-label="当前分析范围">
         <div class="toolbar-row toolbar"><p>每月22号更新上一月指标数据，遇国家节假日可能延后三天。</p><div class="period-controls filters"><label for="dept-filter">科室范围</label><el-select id="dept-filter" ref="deptSelect" v-model="selectedDepartment" class="department-select" size="medium" popper-class="report-dept-popper" placeholder="全院"><el-option value="" style="display:none"></el-option><el-cascader-panel v-model="selectedDeptPath" :options="departmentOptions" :props="{ label: 'deptName', value: 'value', children: 'children', emitPath: true, checkStrictly: true, multiple: false }" @change="selectDepartment"></el-cascader-panel></el-select><label for="time-filter">时间范围</label><el-cascader id="time-filter" v-model="selMonths" class="time-select" @change="selectPeriod" size="medium" collapse-tags clearable :props="{ multiple: true, emitPath: false }" :options="monthsOptions" :visible-arrow="false" popper-class="overview-theme-popper-class" placeholder="选择统计月份" /></div></div>
-        <div class="scope-strip workspace-top"><div class="scope-title"><b>{{ periodLabel }} · {{ selectedDepartment }}</b><span class="sample">{{ indicatorTotal }} 项指标 / {{ modules.length }} 项制度模块</span></div></div>
+        <div class="scope-strip workspace-top"><div class="scope-title"><b>{{ periodLabel }} · {{ selectedDepartment }}</b><span class="sample">{{ indicatorTotal }} 项指标</span></div></div>
       </section>
 
       <section v-for="module in modules" :id="module.anchor" :key="module.id" class="module">
@@ -715,7 +732,7 @@ h2{font-size:26px;line-height:1.45}
           <div v-if="(module.id === 3 || module.id === 4) && !hasDisplayData" class="module-empty">{{selectedDepartment !== '全院' ? '该科室暂无演示数据' : '所选时段暂无该指标数据'}}</div>
           <div v-if="module.id === 3 && hasDisplayData" class="discussion-layout-v2">
             <section class="discussion-left"><h3>疑难病例讨论 <small>↑ 越高越好</small></h3><div class="discussion-metrics"><div v-for="code in discussionCodes" :key="code" class="discussion-metric" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><div class="discussion-metric-head"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><strong>{{displayValue(indicators[code])}}<small>%</small></strong></div><div class="discussion-scale" :aria-label="indicators[code].name+' '+displayValue(indicators[code])+'%'" role="img"><span>0%</span><div class="discussion-track"><i :style="{width:indicators[code].value+'%'}"></i><em :style="{left:indicators[code].value+'%'}"></em></div><span>100%</span></div><div class="delta-row"><span :class="deltaClass(indicators[code],indicators[code].deltaYoY)">同比 {{deltaArrow(indicators[code].deltaYoY)}} {{signed(indicators[code].deltaYoY)}}</span><span :class="deltaClass(indicators[code],indicators[code].deltaMoM)">环比 {{deltaArrow(indicators[code].deltaMoM)}} {{signed(indicators[code].deltaMoM)}}</span></div></div></div></section>
-            <section class="discussion-right"><h3>死亡病例讨论与归档 <small>↑ 越高越好</small></h3><div v-for="code in deathCodes" :key="code" class="death-row" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><div class="death-fraction"><span>{{indicators[code].num}}<small>{{fractionLabels(indicators[code])[0]}}</small></span><b>/</b><span>{{indicators[code].den}}<small>{{fractionLabels(indicators[code])[1]}}</small></span></div><strong>{{displayValue(indicators[code])}}<small>{{displayUnit(indicators[code])}}</small></strong></div></section>
+            <section class="discussion-right"><h3>死亡病例讨论与归档 <small>↑ 越高越好</small></h3><div v-for="code in deathCodes" :key="code" class="death-row" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><strong>{{displayValue(indicators[code])}}<small>{{displayUnit(indicators[code])}}</small></strong><div class="death-fraction"><span>{{indicators[code].num}}<small>{{fractionLabels(indicators[code])[0]}}</small></span><b>/</b><span>{{indicators[code].den}}<small>{{fractionLabels(indicators[code])[1]}}</small></span></div></div></section>
           </div>
           <div v-if="module.id === 4 && hasDisplayData" class="surgery-layout-v2">
             <div class="surgery-bottom"><section class="surgery-ratios"><h3>四级 / 三级手术风险对照 <small>监测比较</small></h3><div v-for="code in surgeryRatioCodes" :key="code" class="surgery-ratio" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><div class="surgery-ratio-head"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><strong>{{displayValue(indicators[code])}}<small>倍</small></strong></div><div v-for="(value,label) in indicators[code].subValues" :key="label" class="surgery-ratio-detail"><span>{{label}}</span><div class="surgery-line"><i :style="{width:ratioWidth(indicators[code],value)}"></i></div><b>{{value}}%</b></div></div></section>
@@ -802,7 +819,7 @@ h2{font-size:26px;line-height:1.45}
           surgeryRatioCodes: ['sjssysjssbfzfslb', 'sjssysjsshzswlb'],
           surgeryQualityCodes: ['ssjsssjkzl', 'sjsssqdxktlwcl', 'ssyssssjzhl', 'mzyssssjzhl'],
           startMonth: 1, endMonth: 8, activeModule: 1,
-          topTab: 'overview', hoveredIndicator: null, hoverTipStyle: { left: '0px', top: '0px' }, selected: null, charts: []
+          topTab: 'overview', hoveredIndicator: null, hoverCandidate: null, hoverTipStyle: { left: '0px', top: '0px' }, selected: null, charts: []
         }
       },
       computed: {
@@ -831,16 +848,19 @@ h2{font-size:26px;line-height:1.45}
           var lastOrder = this.rankingDepartments.slice().sort(function (a, b) { return descending ? b.lastValue - a.lastValue : a.lastValue - b.lastValue })
           return lastOrder.findIndex(function (item) { return item.name === dept.name }) - index
         },
-        showIndicatorTip: function (kpi, event) { this.hoveredIndicator = kpi; this.moveIndicatorTip(event) },
+        showIndicatorTip: function (kpi, event) { this.hoverCandidate = kpi; this.moveIndicatorTip(event) },
         moveIndicatorTip: function (event) {
-          if (!this.hoveredIndicator || !event) return
+          if (!this.hoverCandidate || !event) return
+          var target = event.target.closest && event.target.closest('.kpi-name, .discussion-metric-head button, .death-row button, .surgery-ratio-head button, .surgery-quality-item button')
+          if (!target) { this.hoveredIndicator = null; return }
+          this.hoveredIndicator = this.hoverCandidate
           var width = 530, height = 310, gap = 16
           var left = Math.min(event.clientX + gap, window.innerWidth - width - 12)
           var top = event.clientY + gap
           if (top + height > window.innerHeight) top = event.clientY - height - gap
           this.hoverTipStyle = { left: Math.max(12, left) + 'px', top: Math.max(12, top) + 'px' }
         },
-        hideIndicatorTip: function () { this.hoveredIndicator = null },
+        hideIndicatorTip: function () { this.hoverCandidate = null; this.hoveredIndicator = null },
         redrawCharts: function () {
           this.charts.forEach(function (chart) { chart.dispose() })
           this.charts = []
@@ -945,17 +965,15 @@ h2{font-size:26px;line-height:1.45}
           var volume = echarts.init(document.getElementById('volumeChart'))
           var trend = echarts.init(document.getElementById('trendChart'))
           var trendSource = window.trendData.series.find(function (item) { return item.name === this.trendSelection }, this) || window.trendData.series[0]
-          var chosen = this.selMonths
-          var filter = function (data) { return data.filter(function (value, index) { return chosen.includes(window.demoAllMonths[index]) }) }
           var trendMonths = window.trendData.months.slice()
           volume.setOption({
             color: ['#376def', '#1db88a', '#8066dc', '#e99a42'],
             tooltip: { trigger: 'axis', textStyle: { fontSize: 20 } },
             legend: { top: 4, textStyle: { color: text, fontSize: 20 } },
             grid: { left: 68, right: 28, top: 70, bottom: 50 },
-            xAxis: { type: 'category', data: filter(window.supplementBarData.months), axisLine: { lineStyle: { color: axis } }, axisLabel: { color: text, fontSize: 20 } },
+            xAxis: { type: 'category', data: window.supplementBarData.months.slice(), axisLine: { lineStyle: { color: axis } }, axisLabel: { color: text, fontSize: 20 } },
             yAxis: { type: 'value', splitLine: { lineStyle: { color: split } }, axisLabel: { color: text, fontSize: 20 } },
-            series: window.supplementBarData.series.map(function (item) { return { name: item.name, type: 'bar', barMaxWidth: 28, data: filter(item.data), emphasis: { focus: 'series' } } })
+            series: window.supplementBarData.series.map(function (item) { return { name: item.name, type: 'bar', barMaxWidth: 28, data: item.data.slice(), emphasis: { focus: 'series' } } })
           })
           trend.setOption({
             color: ['#f8b55b'],
