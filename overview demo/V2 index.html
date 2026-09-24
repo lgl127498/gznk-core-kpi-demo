@@ -414,6 +414,154 @@
 .critical-primary{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:14px 0 18px;margin-bottom:14px;border-bottom:1px solid #d7e3f0}
 .critical-primary>div{display:flex;gap:7px;align-items:baseline}.critical-primary b{font-size:38px;line-height:1.2;font-weight:600;color:#376def;font-variant-numeric:tabular-nums}.critical-primary span{font-size:13px;color:#7387a1}.critical-primary small{font-size:12px;color:#8a9cb1}.critical-breakdown-label{font-size:12px;color:#6d839e;margin:0 0 10px}
 .coverage-label{display:grid;grid-template-columns:1fr 1fr;gap:16px;line-height:1.7}.coverage-label span{min-width:0;white-space:normal;overflow-wrap:anywhere}
+/* Web 看板：固定范围、统一阅读层级，并为模块一保留混合图表布局。 */
+.project-header{z-index:60}
+.overview-context{position:sticky;top:64px;z-index:50;min-height:74px;margin:0 -24px 20px;padding:12px 24px;background:rgba(55,109,239,.97);box-shadow:0 7px 14px rgba(18,57,126,.14)}
+.scope-title{gap:8px 14px}.scope-title strong{font-size:22px}.scope-title span,.scope-title small,.period-controls>span{font-size:15px}.scope-title small{flex-basis:auto;order:3}
+.period-controls{margin-left:auto;gap:12px}.department-select{width:170px}.period-controls .el-cascader{width:300px}
+.module-heading{margin-bottom:18px}.module-sub{display:none}.module-count{font-size:14px}
+.visual-heading .kpi-name{font-size:16px;line-height:1.55}.metric-visual{min-height:224px;padding:18px 20px}.visual-heading{min-height:56px}.metric-reading{margin-top:14px}.reading-ring b{font-size:32px}.reading-ring small{font-size:14px}.risk-reading b,.coverage-value b,.ratio-head b{font-size:38px}.risk-reading small,.coverage-value span,.ratio-head span{font-size:15px}.risk-reading>span{display:none}.delta-row,.reading-detail strong,.reading-detail em{font-size:14px}.delta-row{margin-top:14px;gap:8px 16px}.delta-row span,.reading-detail strong,.reading-detail em{display:inline-flex;gap:4px;align-items:center}.good{color:#168265}.bad{color:#c65345}
+.badge-row{display:none}.direction{display:none}.info-button{width:21px;height:21px;font-size:13px;line-height:19px}
+.board-1{grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid #e4edf8;border-radius:10px;overflow:hidden;background:#fff}.board-1 .metric-visual{border-right:1px solid #e7eef8;border-bottom:1px solid #e7eef8}.board-1 .metric-visual:nth-child(4n){border-right:0}
+.business-volume{grid-column:span 2;grid-row:span 2;min-height:448px;padding:20px;background:linear-gradient(145deg,#f3f7ff,#fff)}.business-volume .chart-caption{font-size:14px;margin-bottom:4px}.business-volume .chart{height:360px}.board-1 .visual-ring{background:#fbfdff}.board-1 .visual-ring .metric-reading{justify-content:flex-start;gap:18px}.board-1 .reading-ring{width:104px;height:104px}.board-1 .reading-ring::after{width:82px;height:82px}.board-1 .reading-detail{gap:8px}.board-1 .reading-detail span{display:none}
+.board-2 .visual-response{grid-column:1/-1;min-height:246px;padding:22px 28px;order:2;background:linear-gradient(100deg,#eef7ff,#fff)}.board-2 .metric-visual:not(.visual-response){order:1}.board-2 .critical-primary{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px;padding:0 0 12px}.board-2 .critical-breakdown-label{font-size:14px}.board-2 .response-visual{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:0}.board-2 .response-row{grid-template-columns:44px minmax(0,1fr) 58px;font-size:14px}.board-2 .visual-note{display:none}
+.coverage-value em,.ratio-head em{display:none}.coverage-label,.visual-note,.axis-caption,.chart-caption{font-size:13px}.coverage-label{margin-top:10px}.segment-meter{margin:20px 0 12px}.coverage-track{height:14px}.response-track{height:11px}.comparison-track{height:10px}
+.inline-chart{display:none}.bottom-grid{margin-top:24px}.insight-panel h3{font-size:18px}.insight-panel p{font-size:14px}.chart{height:340px}
+@media(max-width:1320px){.business-volume{grid-column:span 2}.board-1 .metric-visual:nth-child(3n){border-right:1px solid #e7eef8}.board-1 .metric-visual:nth-child(4n){border-right:1px solid #e7eef8}.board-2 .response-visual{grid-template-columns:1fr}}
+@media(max-width:1000px){.overview-context{top:64px}.scope-title small{display:none}.period-controls{margin-left:0;width:100%;flex-wrap:wrap}.business-volume{grid-column:1/-1;grid-row:auto;min-height:350px}.business-volume .chart{height:280px}.board-1{grid-template-columns:repeat(2,minmax(0,1fr))}.board-1 .metric-visual{border-right:1px solid #e7eef8}.board-2 .response-visual{grid-template-columns:1fr}.bottom-grid{grid-template-columns:1fr}.side-nav{display:none}}
+/* 本轮模块布局调整。 */
+.period-controls .department-select.el-cascader{width:210px}
+.board-1{overflow:visible}.board-1 .metric-visual:hover{z-index:12}.board-1 .visual-ring{min-height:224px}
+/* 左侧危急值报告时效，右侧六项会诊与抢救指标。 */
+.board-2{display:grid;grid-template-columns:1.12fr 1fr 1fr;overflow:visible;border:1px solid #e4edf8;border-radius:10px;background:#fff}.board-2 .metric-visual{border-right:1px solid #e7eef8;border-bottom:1px solid #e7eef8}.board-2 .visual-response{grid-column:1;grid-row:span 3;order:-1;min-height:100%;padding:26px;background:linear-gradient(145deg,#eaf5ff,#f9fcff)}.board-2 .critical-primary{display:block;margin:8px 0 20px;padding:0 0 20px;border-bottom:1px solid #cfe0f5}.board-2 .critical-breakdown-label{font-size:14px;margin-bottom:18px}.board-2 .response-visual{display:grid;grid-template-columns:1fr;gap:18px;margin:0}.board-2 .response-row{grid-template-columns:42px minmax(0,1fr) 62px;font-size:14px}.board-2 .response-track{height:10px}.board-2 .visual-note{display:none}.board-2 .metric-visual:not(.visual-response){min-height:222px}.board-2 .metric-visual:hover{z-index:12}
+/* 疑难病例与死亡病例：左侧讨论质量，右侧死亡病例讨论与归档台账。 */
+.board-3{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(460px,1.5fr);gap:0;overflow:visible;border:1px solid #e4edf8;border-radius:10px;background:#fff}.board-3 .metric-visual{border-right:0;border-bottom:1px solid #e7eef8}.board-3 .discussion-card{grid-column:1;background:#fbfdff}.board-3 .discussion-card .metric-reading{justify-content:flex-start;gap:18px}.board-3 .ledger-card{grid-column:2;display:grid;grid-template-columns:minmax(180px,1fr) minmax(250px,1.5fr) 110px;column-gap:20px;align-items:center;min-height:112px;padding:18px 24px;background:#fff}.board-3 .ledger-card .visual-heading{min-height:auto}.board-3 .ledger-card .coverage-value{grid-column:3;grid-row:1;margin:0;justify-self:end}.board-3 .ledger-card .coverage-track{display:none}.board-3 .ledger-card .coverage-label{grid-column:2;grid-row:1;margin:0;gap:12px}.board-3 .ledger-card .coverage-label span{padding:8px 10px;border-radius:5px;background:#f5f8fd}.board-3 .metric-visual:hover{z-index:12}
+/* 术前讨论、手术安全与分级管理按业务场景分区。 */
+.board-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:visible;border:1px solid #e4edf8;border-radius:10px;background:#fff}.board-4 .metric-visual{border-right:1px solid #e7eef8;border-bottom:1px solid #e7eef8}.board-4 .procedure-card{grid-column:span 1;background:#fbfdff}.board-4 .safety-card{grid-column:span 2;min-height:240px;background:#fffaf3}.board-4 .grade-card{grid-column:span 2;min-height:238px}.board-4 .visual-comparison{padding:20px 24px}.board-4 .metric-visual:hover{z-index:12}
+@media(max-width:1320px){.board-3{grid-template-columns:minmax(230px,.85fr) minmax(380px,1.35fr)}}
+@media(max-width:1000px){.board-1,.board-2,.board-4{grid-template-columns:repeat(2,minmax(0,1fr))}.board-2 .visual-response{grid-column:1/-1;grid-row:auto}.board-3{grid-template-columns:1fr}.board-3 .discussion-card,.board-3 .ledger-card{grid-column:1}.board-3 .ledger-card{grid-template-columns:1fr auto}.board-3 .ledger-card .coverage-value{grid-column:2;grid-row:1}.board-3 .ledger-card .coverage-label{grid-column:1;grid-row:2}.board-4 .procedure-card,.board-4 .safety-card,.board-4 .grade-card{grid-column:span 1}}
+/* 与数据报表相同的 select + cascader panel 入口，日期控件始终保留。 */
+body{min-width:1000px}.overview-context{display:grid;grid-template-columns:minmax(220px,1fr) auto;align-items:center;column-gap:24px;min-height:88px}
+.period-controls{display:flex;align-items:center;justify-content:flex-end;flex-wrap:nowrap;min-width:0;margin:0;gap:10px}.period-controls label{flex:none;color:#ecf3ff;font-size:14px;white-space:nowrap}
+.period-controls .department-select{flex:none;width:210px}.period-controls .time-select.el-cascader{flex:none;width:300px}.period-controls .el-select .el-input__inner,.period-controls .time-select .el-input__inner{height:38px;line-height:38px;background:#fff;color:#28476e;border:1px solid #cbdaf0;border-radius:6px}.period-controls .el-input__icon{color:#6885ad}
+.report-dept-popper .el-select-dropdown__list{padding:0}.report-dept-popper .el-cascader-panel{font-size:14px}.report-dept-popper .el-cascader-menu{min-width:158px}.report-dept-popper .el-cascader-node{min-height:38px;line-height:38px}.report-dept-popper .el-cascader-node__label{padding-right:16px}
+/* 12-column placement gives the three ring indicators equal width. */
+.board-1{grid-template-columns:repeat(12,minmax(0,1fr))}.board-1 .business-volume{grid-column:span 6;grid-row:span 2}.board-1 .metric-visual:not(.visual-ring){grid-column:span 3}.board-1 .visual-ring{grid-column:span 4;min-height:240px}.board-1 .visual-ring .metric-reading{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:16px}.board-1 .visual-ring .reading-ring{width:112px;height:112px}.board-1 .visual-ring .reading-ring::after{width:88px;height:88px}.board-1 .visual-ring .reading-detail{min-width:0;padding:0}.board-1 .visual-ring .reading-ring b{font-size:31px}.board-1 .visual-ring .reading-ring small{font-size:13px}.board-1 .visual-ring .visual-heading{min-height:58px}
+.board-2 .visual-response{display:flex;flex-direction:column}.board-2 .response-visual{flex:1;grid-template-rows:repeat(3,minmax(0,1fr));align-items:stretch}.board-2 .response-row{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-content:center;gap:7px 12px;border-bottom:1px solid #d6e4f5;padding:12px 0}.board-2 .response-row:last-child{border-bottom:0}.board-2 .response-row .response-track{grid-column:1/-1;grid-row:2}.board-2 .response-row b{grid-column:2;grid-row:1;white-space:nowrap}.board-2 .critical-primary{padding-bottom:18px}.board-2 .critical-primary b{font-size:48px}
+/* Group similar indicator types in complete rows. */
+.board-3{grid-template-columns:repeat(12,minmax(0,1fr));gap:0}.board-3 .discussion-card{grid-column:span 4;min-height:230px;border-top:3px solid #d5e6fa}.board-3 .ledger-card{grid-column:span 6;display:flex;flex-direction:column;align-items:stretch;gap:12px;min-height:260px;padding:20px 24px;border-top:3px solid #b9d0f4}.board-3 .ledger-card .visual-heading{min-height:54px}.board-3 .ledger-card .coverage-value{align-self:flex-start;margin:0}.board-3 .ledger-card .coverage-label{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin:0;gap:12px}.board-3 .ledger-card .coverage-label span{min-width:0;overflow-wrap:anywhere;font-size:13px;line-height:1.55}.board-3 .ledger-card .coverage-value b{font-size:34px}
+.board-4{grid-template-columns:repeat(12,minmax(0,1fr))}.board-4 .procedure-card{grid-column:span 3;min-height:238px;border-top:3px solid #d5e6fa}.board-4 .safety-card{grid-column:span 6;min-height:230px;border-top:3px solid #f1d4a9}.board-4 .grade-card{grid-column:span 6;min-height:262px;border-top:3px solid #cbd9f3}.board-4 .visual-comparison{grid-column:span 6}.board-4 .segment-meter{margin-top:16px}.board-4 .comparison-lines>div{grid-template-columns:minmax(135px,1fr) minmax(60px,2fr) 50px}.board-4 .comparison-lines>div span{overflow-wrap:anywhere}.board-4 .comparison-track{grid-column:2;grid-row:auto}.board-4 .comparison-lines b{grid-column:3;grid-row:auto}
+/* Original overview uses a ranked list and a selected single-metric trend. */
+.bottom-grid{grid-template-columns:minmax(350px,.85fr) minmax(480px,1.15fr);align-items:start;gap:20px}.insight-panel{min-width:0;padding:20px 22px}.insight-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:40px;margin-bottom:12px}.insight-head span{font-size:14px;color:#7285a0}.trend-select{width:min(380px,60%)}.ranking-list-wrap{height:365px;overflow:auto}.ranking-list{border-collapse:collapse;width:100%;font-size:14px;color:#405779}.ranking-list th{text-align:left;font-weight:500;color:#8495ad;padding:7px 10px;border-bottom:1px solid #e4edf8}.ranking-list td{padding:7px 10px;border-bottom:1px solid #edf2f8}.ranking-list th:nth-child(2),.ranking-list td:nth-child(2),.ranking-list th:nth-child(3),.ranking-list td:nth-child(3){text-align:right}.ranking-list .top-rank{background:#f4f8ff}.rank-number{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:12px;border-radius:50%;font-style:normal;color:#6b83aa;background:#eaf0fa}.top-rank .rank-number{color:#fff;background:#376def}.rank-rise{color:#168265}.rank-fall{color:#c65345}.trend-panel .chart{height:365px}
+@media(max-width:1250px){.overview-context{grid-template-columns:1fr;row-gap:8px}.period-controls{justify-content:flex-start}.board-2{grid-template-columns:1fr 1fr}.board-2 .visual-response{grid-column:1/-1;grid-row:auto;min-height:360px}.board-2 .response-visual{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr}.board-4 .procedure-card{grid-column:span 6}}
+.rank-medal{width:26px;height:26px;object-fit:contain;vertical-align:middle;margin-right:12px}
+/* V4 的讨论 / 死亡病例左右结构，保留 V2 的字号与蓝白配色。 */
+.board-3{display:block;border:0;background:transparent}
+.discussion-layout-v2{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);gap:20px}
+.discussion-left,.discussion-right,.surgery-ratios,.surgery-quality{min-width:0;padding:24px 26px;border:1px solid #e1eaf7;border-radius:10px;background:#fff}
+.discussion-left{background:#fbfdff}
+.discussion-layout-v2 h3,.surgery-layout-v2 h3{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 24px;color:#243d60;font-size:21px;line-height:1.4}
+.discussion-layout-v2 h3 small,.surgery-layout-v2 h3 small{flex:none;color:#6883a7;font-size:14px;font-weight:500}
+.discussion-metrics{display:grid;gap:0}
+.discussion-metric{min-width:0;padding:18px 0;border-bottom:1px solid #e1eaf7}
+.discussion-metric:first-child{padding-top:0}
+.discussion-metric:last-child{padding-bottom:0;border-bottom:0}
+.discussion-metric-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:14px}
+.discussion-metric-head strong{color:#2d5cae;font-size:31px;line-height:1.15;white-space:nowrap}
+.discussion-metric-head strong small,.death-row>strong small,.surgery-ratio-head strong small,.surgery-quality-item>strong small{margin-left:2px;color:#7890ad;font-size:18px;font-weight:500}
+.discussion-metric-head button,.death-row button,.surgery-ratio-head button,.surgery-quality-item button{padding:0;border:0;background:none;color:#344d6c;text-align:left;cursor:pointer;font:inherit;line-height:1.45;overflow-wrap:anywhere}
+.discussion-metric-head button{font-size:17px;font-weight:600}
+.discussion-metric-head button span,.death-row button span,.surgery-ratio-head button span,.surgery-quality-item button span{color:#6b96d8;font-weight:400}
+.discussion-scale{display:grid;grid-template-columns:32px minmax(0,1fr) 42px;align-items:center;gap:10px;margin-top:16px;color:#7d90aa;font-size:13px}
+.discussion-scale>span:last-child{text-align:right}
+.discussion-track{position:relative;height:10px;border-radius:8px;background:#e9f1fb}
+.discussion-track i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#3d77ef,#2cc4dc)}
+.discussion-track em{position:absolute;top:50%;width:14px;height:14px;border:2px solid #fff;border-radius:50%;background:#376def;box-shadow:0 0 0 1px #376def;transform:translate(-50%,-50%)}
+.discussion-metric .delta-row{display:flex;gap:8px 18px;margin:12px 0 0 42px;font-size:14px}
+.death-row{display:grid;grid-template-columns:minmax(170px,1.1fr) minmax(260px,1.3fr) 96px;gap:16px;align-items:center;padding:17px 0;border-bottom:1px solid #e7edf7}
+.death-row:last-child{border-bottom:0;padding-bottom:0}
+.death-row button{font-size:16px;font-weight:600}
+.death-fraction{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);gap:9px;align-items:start;min-width:0}
+.death-fraction>span{min-width:0;color:#355a8e;font-size:25px;font-weight:700}
+.death-fraction small{display:block;margin-top:3px;color:#7388a2;font-size:12px;font-weight:400;line-height:1.4;overflow-wrap:anywhere}
+.death-fraction>b{color:#9eafc6;font-size:24px;font-weight:400}
+.death-row>strong{justify-self:end;color:#2a5aad;font-size:29px;white-space:nowrap}
+.module-empty{padding:75px 24px;border:1px solid #e1eaf7;border-radius:10px;background:#fff;color:#8291a5;text-align:center;font-size:18px}
+/* 术前讨论四项沿用原卡片；下方左为两项风险比，右侧先正向后负向。 */
+.board-4{grid-template-columns:repeat(12,minmax(0,1fr));gap:0}
+.board-4>.procedure-card{grid-column:span 3}
+.board-4>.surgery-layout-v2,.board-4>.module-empty{grid-column:1/-1}
+.surgery-layout-v2{padding:20px;background:#fff}
+.surgery-bottom{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.45fr);gap:20px}
+.surgery-ratios,.surgery-quality{padding:24px}
+.surgery-ratios{background:#f4f3fb;border-color:#e6e1f1}
+.surgery-ratio{padding:15px 0 22px;border-bottom:1px solid #e5edf8}
+.surgery-ratio:last-child{border-bottom:0;padding-bottom:0}
+.surgery-ratio-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+.surgery-ratio-head button{max-width:68%;font-size:17px;font-weight:600}
+.surgery-ratio-head strong{color:#24456d;font-size:31px;white-space:nowrap}
+.surgery-ratio-detail{display:grid;grid-template-columns:minmax(115px,1fr) minmax(90px,1.4fr) 58px;gap:10px;align-items:center;margin:10px 0;color:#7186a2;font-size:13px}
+.surgery-ratio-detail b{text-align:right;color:#405f87;font-size:14px}
+.surgery-line{height:10px;border-radius:8px;background:#e7edf7;overflow:hidden}
+.surgery-line i{display:block;height:100%;border-radius:8px;background:#6c9fe5}
+.surgery-ratio-detail .surgery-line{background:#e9f1fb}
+.surgery-ratio-detail .surgery-line i{background:linear-gradient(90deg,#3d77ef,#2cc4dc)}
+.surgery-ratio-detail:last-child .surgery-line i{background:linear-gradient(90deg,#947be6,#cabfff)}
+.surgery-quality-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.surgery-quality-item{display:flex;flex-direction:column;min-width:0;min-height:210px;padding:18px;border:1px solid #e6edf8;border-radius:7px;background:#fff}
+.surgery-quality-item.negative{background:#fffaf3;border-color:#f1d4a9}
+.surgery-quality-item button{min-height:50px;font-size:16px;font-weight:600}
+.surgery-quality-item>strong{margin:8px 0 12px;color:#2d5fb4;font-size:36px;line-height:1}
+.surgery-quality-item .surgery-line i{background:linear-gradient(90deg,#3d77ef,#2cc4dc)}
+.surgery-quality-item.negative>strong{color:#ae7140}
+.surgery-quality-item.negative .surgery-line i{background:#d69645}
+.surgery-quality-item .delta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:14px;font-size:14px}
+@media(max-width:1450px){.discussion-layout-v2,.surgery-bottom{grid-template-columns:1fr}.discussion-left,.discussion-right{padding:24px}.death-row{grid-template-columns:minmax(180px,1.1fr) minmax(270px,1.4fr) 100px}}
+@media(max-width:1100px){.board-4>.procedure-card{grid-column:span 6}.surgery-quality-grid{grid-template-columns:1fr 1fr}.death-row{grid-template-columns:minmax(150px,1fr) minmax(240px,1.3fr) 90px}}
+/* V4 固定顶栏：仅增加 V2 所需的单选科室，移除对比基准和图例行。 */
+.project-header{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;padding:0 28px;border:0;background:#376def;box-shadow:none;backdrop-filter:none}
+.project-brand{gap:10px;font-size:21px;letter-spacing:0;white-space:nowrap}
+.project-brand img{width:30px;height:30px}
+.top-tabs{gap:60px}
+.top-tabs button{font-size:21px;padding:0 3px}
+.top-tabs button::after{bottom:10px}
+.project-user{gap:8px;font-size:20px}
+.project-user img{width:23px;height:23px}
+main{padding-top:calc(var(--overview-height,112px) + 68px)}
+.overview-context{display:block;position:fixed;top:68px;left:0;right:0;z-index:50;min-height:0;margin:0;padding:0 24px;border:0;background:#376def;box-shadow:none}
+.toolbar-row.toolbar{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:52px;padding:9px 4px}
+.overview-context .toolbar-row p{margin:0;color:#edf3ff;font-size:20px;line-height:1.5}
+.toolbar-row .period-controls.filters{display:flex;align-items:center;justify-content:flex-end;flex-wrap:nowrap;flex:none;gap:12px;margin:0}
+.toolbar-row .period-controls label{color:#fff;font-size:20px;white-space:nowrap}
+.toolbar-row .period-controls .department-select{width:210px}
+.toolbar-row .period-controls .time-select.el-cascader{width:380px}
+.toolbar-row .period-controls .el-select .el-input__inner,.toolbar-row .period-controls .time-select .el-input__inner{height:46px;line-height:46px;padding-left:18px;border:1px solid #ffffffa6;border-radius:18px;background:transparent;color:#fff;font-size:20px}
+.toolbar-row .period-controls .el-input__icon{color:#fff;line-height:46px}
+.toolbar-row .period-controls .el-cascader__tags .el-tag{border:0;background:#376def;color:#fff;font-size:18px}
+.scope-strip.workspace-top{display:flex;align-items:center;min-height:58px;padding:9px 28px;border:0;border-bottom:1px solid #e2eaf3;border-radius:12px 12px 0 0;background:#fff;box-shadow:none}
+.scope-strip .scope-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.scope-strip .scope-title b{color:#203650;font-size:20px;font-weight:600}
+.scope-strip .sample{padding-left:14px;border-left:1px solid #cfdae7;color:#647991;font-size:20px}
+.module{scroll-margin-top:205px}
+@media(max-width:1450px){.toolbar-row.toolbar{flex-wrap:wrap;justify-content:flex-start;gap:8px}.toolbar-row .period-controls.filters{width:100%;justify-content:flex-start}.project-brand,.top-tabs button{font-size:20px}}
+/* 第五模块圆环与首模块统一尺寸，数值完整留在圆心。 */
+.board-5{grid-template-columns:repeat(4,minmax(0,1fr))}
+.board-5 .metric-visual{min-width:0}
+.board-5 .metric-reading{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;justify-content:start;gap:16px}
+.board-1 .visual-ring .reading-ring,.board-5 .reading-ring{width:112px;height:112px}
+.board-1 .visual-ring .reading-ring::after,.board-5 .reading-ring::after{width:88px;height:88px}
+.board-1 .visual-ring .reading-ring div,.board-5 .reading-ring div{display:flex;align-items:baseline;justify-content:center;width:88px;white-space:nowrap}
+.board-1 .visual-ring .reading-ring b,.board-5 .reading-ring b{font-size:31px}
+.board-1 .visual-ring .reading-ring small,.board-5 .reading-ring small{font-size:13px}
+.board-5 .reading-detail{min-width:0;padding:0}
+@media(max-width:1350px){.board-5{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* 公共悬浮说明脱离卡片裁剪区域。 */
+.indicator-floating-tip{position:fixed;z-index:90;width:min(390px,calc(100vw - 24px));max-height:min(290px,50vh);overflow:hidden;padding:14px 16px;border:1px solid #b7cbee;border-radius:9px;background:rgba(255,255,255,.98);box-shadow:0 14px 34px rgba(31,71,128,.22);color:#4c607e;font-size:14px;line-height:1.55;pointer-events:none;overflow-wrap:anywhere}
+.indicator-floating-tip strong{display:block;margin-bottom:5px;color:#284b7a;font-size:15px}
+.indicator-floating-tip .formula{display:block;margin-top:7px;padding-top:7px;border-top:1px solid #e7eef8;color:#376def}
+.modal-mask{z-index:120}
+.rank-order-button{padding:6px 12px;border:1px solid #cdddf3;border-radius:5px;background:#f1f6ff;color:#376def;font-size:14px;font-weight:600;cursor:pointer}
+.rank-order-button:hover{background:#e4eeff}
 </style>
 </head>
 <body>
@@ -424,10 +572,10 @@
         <span>医疗质量安全核心制度指标管理平台</span>
       </div>
       <nav class="top-tabs" aria-label="一级导航">
-        <button :class="{ active: topTab === 'overview' }" @click="topTab = 'overview'">全院分析</button>
+        <button :class="{ active: topTab === 'overview' }" @click="topTab = 'overview'">指标监测</button>
         <button :class="{ active: topTab === 'report' }" @click="topTab = 'report'">报表中心</button>
       </nav>
-      <div class="project-user"><span class="user-icon">◯</span><span>lgl</span></div>
+      <div class="project-user"><img src="assets/img/user.svg" alt="" /><span>lgl</span></div>
     </header>
 
     <nav class="side-nav" aria-label="指标模块目录">
@@ -435,31 +583,26 @@
         <span class="nav-compact">{{ ['查房','急救','讨论','手术','用药'][module.id - 1] }}</span>
         <span class="nav-label">{{ module.shortName }}</span>
       </button>
+      <button class="nav-dot" :class="{ active: activeModule === 6 }" @click="scrollTo('insights')" title="统计分析"><span class="nav-compact">统计</span><span class="nav-label">统计分析</span></button>
     </nav>
 
     <main>
       <section class="overview-context" aria-label="当前分析范围">
-        <div class="scope-title"><strong>全院分析</strong><span>35 项指标 · 全院</span><small>每月22日更新，节假日可能延后三天</small></div>
-        <div class="period-controls"><span>时间范围</span><el-cascader v-model="selMonths" @change="selectPeriod" size="medium" collapse-tags clearable :props="{ multiple: true, emitPath: false }" :options="monthsOptions" :visible-arrow="false" popper-class="overview-theme-popper-class" placeholder="选择年 / 季度 / 月份" /></div>
-      </section>
-      <section class="overview-strip" aria-label="概览摘要">
-        <div class="summary-card intro"><div class="label">当前视图</div><div class="number">医疗质量指标全景 <span class="hint">覆盖 5 个制度模块</span></div></div>
-        <div class="summary-card"><div class="label">指标总数</div><div class="number">35 <span class="hint">项核心指标</span></div></div>
-        <div class="summary-card"><div class="label">已上线</div><div class="number">34 <span class="hint">项可查询</span></div></div>
-        <div class="summary-card"><div class="label">指标导向</div><div class="number">26 <span class="hint">正向 / 7 负向</span></div></div>
+        <div class="toolbar-row toolbar"><p>每月22号更新上一月指标数据，遇国家节假日可能延后三天。</p><div class="period-controls filters"><label for="dept-filter">科室范围</label><el-select id="dept-filter" ref="deptSelect" v-model="selectedDepartment" class="department-select" size="medium" popper-class="report-dept-popper" placeholder="全院"><el-option value="" style="display:none"></el-option><el-cascader-panel v-model="selectedDeptPath" :options="departmentOptions" :props="{ label: 'deptName', value: 'value', children: 'children', emitPath: true, checkStrictly: true, multiple: false }" @change="selectDepartment"></el-cascader-panel></el-select><label for="time-filter">时间范围</label><el-cascader id="time-filter" v-model="selMonths" class="time-select" @change="selectPeriod" size="medium" collapse-tags clearable :props="{ multiple: true, emitPath: false }" :options="monthsOptions" :visible-arrow="false" popper-class="overview-theme-popper-class" placeholder="选择统计月份" /></div></div>
+        <div class="scope-strip workspace-top"><div class="scope-title"><b>{{ periodLabel }} · {{ selectedDepartment }}</b><span class="sample">{{ indicatorTotal }} 项指标 / {{ modules.length }} 项制度模块</span></div></div>
       </section>
 
       <section v-for="module in modules" :id="module.anchor" :key="module.id" class="module">
         <div class="module-heading">
           <div>
             <div class="module-title-wrap"><span class="module-index">{{ module.id }}</span><h2>{{ module.name }}</h2></div>
-            <p class="module-sub">{{ moduleDescription(module.id) }}</p>
           </div>
           <span class="module-count">{{ regularIndicators(module).length }} 项指标</span>
         </div>
 
         <div class="metric-board" :class="'board-' + module.id">
-          <article v-for="(kpi, index) in regularIndicators(module)" :key="kpi.code" class="metric-visual" :class="visualClass(kpi, index, module)" @mouseenter="hoveredCode = kpi.code" @mouseleave="hoveredCode = null">
+          <article v-if="module.id === 1" class="business-volume" aria-label="收治与手术规模"><div class="chart-caption">收治与手术规模</div><div id="volumeChart" class="chart"></div></article>
+          <article v-for="(kpi, index) in regularIndicators(module)" v-if="module.id !== 3 && (module.id !== 4 || index < 4)" :key="kpi.code" class="metric-visual" :class="visualClass(kpi, index, module)" @mouseenter="showIndicatorTip(kpi,$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip">
             <div class="visual-heading">
               <div class="kpi-name">{{ kpi.name }}</div>
               <button class="info-button" aria-label="查看指标说明" @click.stop="selected = kpi">i</button>
@@ -467,7 +610,7 @@
             <div class="badge-row"><span class="direction" :class="kpi.direction">{{ directionText(kpi.direction) }}</span><span v-if="kpi.status === 'offline'" class="status offline">未上线</span></div>
 
             <template v-if="kpi.status === 'offline'"><div class="offline-visual"><span>暂未上线</span><i></i><i></i><i></i></div></template>
-            <div v-else-if="!hasFullPeriod()" class="no-data">所选时段暂无该指标数据</div>
+            <div v-else-if="!hasDisplayData" class="no-data">{{ selectedDepartment !== '全院' ? '该科室暂无演示数据' : '所选时段暂无该指标数据' }}</div>
             <template v-else-if="kpi.type === 'multi-value'">
 <div class="critical-primary"><div><b>{{Number.isFinite(kpi.value)?kpi.value:'—'}}</b><span>分钟</span></div></div><div class="critical-breakdown-label">分场景报告时间（中位数）</div>
               <div class="response-visual"><div v-for="(value, label) in kpi.subValues" :key="label" class="response-row"><span>{{ label }}</span><div class="response-track"><i :style="{ width: responseWidth(value) }"></i></div><b>{{ value }}<small> min</small></b></div></div>
@@ -483,33 +626,39 @@
               <div class="comparison-lines"><div v-for="(value, label) in kpi.subValues" :key="label"><span>{{ label }}</span><div class="comparison-track"><i :style="{ width: ratioWidth(kpi, value) }"></i></div><b>{{ value }}%</b></div></div>
             </template>
             <template v-else-if="kpi.direction === 'negative'">
-              <div class="risk-reading"><b>{{ displayValue(kpi) }}<small>%</small></b><span>发生比例 · 越低越好</span></div>
+              <div class="risk-reading"><b>{{ displayValue(kpi) }}<small>%</small></b></div>
               <div class="risk-scale"><i :style="{width: kpi.value + '%'}"></i><span :style="{left: kpi.value + '%'}"></span></div><div class="axis-caption"><span>0%</span><span>100%</span></div>
-              <div class="delta-row"><span :class="deltaClass(kpi,kpi.deltaYoY)">同比 {{ signed(kpi.deltaYoY) }}</span><span :class="deltaClass(kpi,kpi.deltaMoM)">环比 {{ signed(kpi.deltaMoM) }}</span></div>
+              <div class="delta-row"><span :class="deltaClass(kpi,kpi.deltaYoY)">同比 {{ deltaArrow(kpi.deltaYoY) }} {{ signed(kpi.deltaYoY) }}</span><span :class="deltaClass(kpi,kpi.deltaMoM)">环比 {{ deltaArrow(kpi.deltaMoM) }} {{ signed(kpi.deltaMoM) }}</span></div>
             </template>
             <template v-else-if="module.id === 2 || module.id === 4">
               <div class="coverage-value"><b>{{ displayValue(kpi) }}</b><span>%</span><em>制度执行率</em></div>
               <div class="segment-meter"><i v-for="n in 20" :style="{background: 'linear-gradient(90deg, #376def ' + Math.max(0,Math.min(100,(kpi.value - (n-1)*5)*20)) + '%, #e8eef6 0%)'}"></i></div>
-              <div class="delta-row"><span :class="deltaClass(kpi,kpi.deltaYoY)">同比 {{ signed(kpi.deltaYoY) }}</span><span :class="deltaClass(kpi,kpi.deltaMoM)">环比 {{ signed(kpi.deltaMoM) }}</span></div>
+              <div class="delta-row"><span :class="deltaClass(kpi,kpi.deltaYoY)">同比 {{ deltaArrow(kpi.deltaYoY) }} {{ signed(kpi.deltaYoY) }}</span><span :class="deltaClass(kpi,kpi.deltaMoM)">环比 {{ deltaArrow(kpi.deltaMoM) }} {{ signed(kpi.deltaMoM) }}</span></div>
             </template>
             <template v-else>
-              <div class="metric-reading"><div class="reading-ring" :style="ringStyle(kpi)"><div><b>{{ displayValue(kpi) }}</b><small>%</small></div></div><div class="reading-detail"><span>{{ kpi.subSystem }}</span><strong :class="deltaClass(kpi, kpi.deltaYoY)">同比{{ feedbackWord(kpi, kpi.deltaYoY) }} {{ signed(kpi.deltaYoY) }}</strong><em :class="deltaClass(kpi, kpi.deltaMoM)">环比{{ feedbackWord(kpi, kpi.deltaMoM) }} {{ signed(kpi.deltaMoM) }}</em></div></div>
+              <div class="metric-reading"><div class="reading-ring" :style="ringStyle(kpi)"><div><b>{{ displayValue(kpi) }}</b><small>%</small></div></div><div class="reading-detail"><strong :class="deltaClass(kpi, kpi.deltaYoY)">同比 {{ deltaArrow(kpi.deltaYoY) }} {{ signed(kpi.deltaYoY) }}</strong><em :class="deltaClass(kpi, kpi.deltaMoM)">环比 {{ deltaArrow(kpi.deltaMoM) }} {{ signed(kpi.deltaMoM) }}</em></div></div>
             </template>
-            <div v-if="hoveredCode === kpi.code" class="hover-tip"><strong>{{ kpi.name }}</strong>{{ kpi.desc || '点击右上角图标查看指标说明。' }}<span class="formula">{{ kpi.formula }}</span></div>
           </article>
+          <div v-if="(module.id === 3 || module.id === 4) && !hasDisplayData" class="module-empty">{{selectedDepartment !== '全院' ? '该科室暂无演示数据' : '所选时段暂无该指标数据'}}</div>
+          <div v-if="module.id === 3 && hasDisplayData" class="discussion-layout-v2">
+            <section class="discussion-left"><h3>疑难病例讨论 <small>↑ 越高越好</small></h3><div class="discussion-metrics"><div v-for="code in discussionCodes" :key="code" class="discussion-metric" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><div class="discussion-metric-head"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><strong>{{displayValue(indicators[code])}}<small>%</small></strong></div><div class="discussion-scale" :aria-label="indicators[code].name+' '+displayValue(indicators[code])+'%'" role="img"><span>0%</span><div class="discussion-track"><i :style="{width:indicators[code].value+'%'}"></i><em :style="{left:indicators[code].value+'%'}"></em></div><span>100%</span></div><div class="delta-row"><span :class="deltaClass(indicators[code],indicators[code].deltaYoY)">同比 {{deltaArrow(indicators[code].deltaYoY)}} {{signed(indicators[code].deltaYoY)}}</span><span :class="deltaClass(indicators[code],indicators[code].deltaMoM)">环比 {{deltaArrow(indicators[code].deltaMoM)}} {{signed(indicators[code].deltaMoM)}}</span></div></div></div></section>
+            <section class="discussion-right"><h3>死亡病例讨论与归档 <small>↑ 越高越好</small></h3><div v-for="code in deathCodes" :key="code" class="death-row" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><div class="death-fraction"><span>{{indicators[code].num}}<small>{{fractionLabels(indicators[code])[0]}}</small></span><b>/</b><span>{{indicators[code].den}}<small>{{fractionLabels(indicators[code])[1]}}</small></span></div><strong>{{displayValue(indicators[code])}}<small>{{displayUnit(indicators[code])}}</small></strong></div></section>
+          </div>
+          <div v-if="module.id === 4 && hasDisplayData" class="surgery-layout-v2">
+            <div class="surgery-bottom"><section class="surgery-ratios"><h3>四级 / 三级手术风险对照 <small>监测比较</small></h3><div v-for="code in surgeryRatioCodes" :key="code" class="surgery-ratio" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><div class="surgery-ratio-head"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><strong>{{displayValue(indicators[code])}}<small>倍</small></strong></div><div v-for="(value,label) in indicators[code].subValues" :key="label" class="surgery-ratio-detail"><span>{{label}}</span><div class="surgery-line"><i :style="{width:ratioWidth(indicators[code],value)}"></i></div><b>{{value}}%</b></div></div></section>
+              <section class="surgery-quality"><h3>分级手术执行与安排 <small>正向在前 · 负向在后</small></h3><div class="surgery-quality-grid"><div v-for="code in surgeryQualityCodes" :key="code" class="surgery-quality-item" :class="indicators[code].direction" @mouseenter="showIndicatorTip(indicators[code],$event)" @mousemove="moveIndicatorTip($event)" @mouseleave="hideIndicatorTip"><button :title="indicators[code].desc" @click="selected=indicators[code]">{{indicators[code].name}} <span>ⓘ</span></button><strong>{{displayValue(indicators[code])}}<small>%</small></strong><div class="surgery-line"><i :style="{width:indicators[code].value+'%'}"></i></div><div class="delta-row"><span :class="deltaClass(indicators[code],indicators[code].deltaYoY)">同比 {{deltaArrow(indicators[code].deltaYoY)}} {{signed(indicators[code].deltaYoY)}}</span><span :class="deltaClass(indicators[code],indicators[code].deltaMoM)">环比 {{deltaArrow(indicators[code].deltaMoM)}} {{signed(indicators[code].deltaMoM)}}</span></div></div></div></section></div>
+          </div>
         </div>
 
-        <div v-if="module.id === 1" class="inline-chart">
-          <div class="chart-caption">补充展示：入院、出院、手术及四级手术人数（月度趋势）</div>
-          <div id="volumeChart" class="chart"></div>
-        </div>
       </section>
 
       <section class="bottom-grid" id="insights">
-        <article class="insight-panel"><h3>院内科室排名</h3><p>本期与同期综合得分对照 · 蝴蝶图</p><div id="rankingChart" class="chart"></div></article>
-        <article class="insight-panel"><h3>质量趋势与业务量</h3><p>五大制度模块趋势（折线）与入院人数（柱状）</p><div id="trendChart" class="chart"></div></article>
+        <article class="insight-panel ranking-panel"><div class="insight-head"><h3>院内科室排名</h3><button class="rank-order-button" @click="rankOrder=rankOrder==='desc'?'asc':'desc'">{{rankOrder==='desc'?'降序 ↓':'升序 ↑'}}</button></div><div v-if="!hasDisplayData" class="no-data">{{ selectedDepartment !== '全院' ? '该科室暂无排名数据' : '所选时段暂无科室排名数据' }}</div><div v-else class="ranking-list-wrap"><table class="ranking-list"><thead><tr><th>排名 / 科室</th><th>当前值</th><th>排名变化</th></tr></thead><tbody><tr v-for="(dept,index) in rankingRows" :key="dept.name" :class="{'top-rank':index<3&&rankOrder==='desc'}"><td><img v-if="index<3&&rankOrder==='desc'" class="rank-medal" :src="'../packages/evaluation/src/assets/overview/'+['ic_paijin.svg','ic_paiyin.svg','ic_paitong.svg'][index]" alt="" /><i v-else class="rank-number">{{index+1}}</i>{{dept.name}}</td><td>{{dept.value}}</td><td><span v-if="rankChange(dept,index)" :class="rankChange(dept,index)>0?'rank-rise':'rank-fall'">{{rankChange(dept,index)>0?'上升':'下降'}} {{Math.abs(rankChange(dept,index))}} 名</span><span v-else>—</span></td></tr></tbody></table></div></article>
+        <article class="insight-panel trend-panel"><div class="insight-head"><h3>质量趋势</h3><el-select v-model="trendSelection" size="small" class="trend-select" @change="redrawCharts"><el-option v-for="item in trendOptions" :key="item" :label="item" :value="item" /></el-select></div><div id="trendChart" class="chart"></div></article>
       </section>
     </main>
+
+    <div v-if="hoveredIndicator && !selected" class="indicator-floating-tip" :style="hoverTipStyle" role="tooltip"><strong>{{hoveredIndicator.name}}</strong>{{hoveredIndicator.desc || '暂未维护详细说明。'}}<span class="formula">{{hoveredIndicator.formula || '暂未维护统计口径。'}}</span></div>
 
     <div v-if="selected" class="modal-mask" @click.self="selected = null">
       <section class="modal" role="dialog" aria-modal="true" aria-label="指标说明">
@@ -527,16 +676,109 @@
     new Vue({
       el: '#app',
       data: function () {
-        return { selMonths: window.demoAllMonths.slice(), monthsOptions: window.demoPeriodOptions, acceptedMonths: window.demoAllMonths.slice(), modules: window.modules || [], indicators: window.indicators || {}, startMonth: 1, endMonth: 8, activeModule: 1, topTab: 'overview', hoveredCode: null, selected: null, charts: [] }
+        var displayedIndicators = Object.assign({}, window.indicators)
+        var deathRatioCode = 'ywbmzztldswblyfsjfdswblbz'
+        displayedIndicators[deathRatioCode] = Object.assign({}, displayedIndicators[deathRatioCode], {
+          desc: '医务部门组织讨论的死亡病例数量占同期发生医疗纠纷的死亡病例数量的比例；页面按百分比展示。',
+          formula: '医务部门组织进行死亡病例讨论的病例数量 ÷ 同期发生医疗纠纷的死亡病例数量 × 100%'
+        })
+        return {
+          selMonths: ['2026-07'],
+          monthsOptions: window.demoPeriodOptions,
+          acceptedMonths: ['2026-07'],
+          // The demo mirrors the report selector's "整体 / 科室" tree shape.
+          // Production options and permissions come from deptUserTree.
+          departmentOptions: [
+            { deptName: '整体', value: '整体', disabled: true, children: [
+              { deptName: '全院', value: '全院' },
+              { deptName: '本部', value: '本部' },
+              { deptName: '术科', value: '术科' },
+              { deptName: '非术科', value: '非术科' }
+            ] },
+            { deptName: '科室', value: '科室', disabled: true, children: [
+              { deptName: '内科系统', value: '内科系统', children: [
+                { deptName: '神经内科', value: '神经内科' },
+                { deptName: '老年病科', value: '老年病科' },
+                { deptName: '康复医学科', value: '康复医学科' }
+              ] },
+              { deptName: '精神心理系统', value: '精神心理系统', children: [
+                { deptName: '精神科', value: '精神科' },
+                { deptName: '心理科', value: '心理科' }
+              ] },
+              { deptName: '外科与急诊系统', value: '外科与急诊系统', children: [
+                { deptName: '神经外科', value: '神经外科' },
+                { deptName: '急诊科', value: '急诊科' },
+                { deptName: '重症医学科', value: '重症医学科' }
+              ] },
+              { deptName: '医技科室', value: '医技科室', children: [
+                { deptName: '麻醉科', value: '麻醉科' },
+                { deptName: '医学影像科', value: '医学影像科' }
+              ] }
+            ] }
+          ],
+          selectedDepartment: '全院',
+          selectedDeptPath: [],
+          rankingDepartments: window.deptRanking || [],
+          rankOrder: 'desc',
+          trendOptions: window.trendData.series.map(function (item) { return item.name }),
+          trendSelection: window.trendData.series[0].name,
+          modules: window.modules || [],
+          indicators: displayedIndicators,
+          discussionCodes: ['fjhzczysshzynbltwcl', 'fjhzczysshzynbltljlwzl', 'geycfyhzjxynbltldzb'],
+          deathCodes: ['swbltl5rwcl', 'ywbmzztldswblyfsjfdswblbz', 'kzrzcswbltll', 'swhzbascl'],
+          surgeryRatioCodes: ['sjssysjssbfzfslb', 'sjssysjsshzswlb'],
+          surgeryQualityCodes: ['ssjsssjkzl', 'sjsssqdxktlwcl', 'ssyssssjzhl', 'mzyssssjzhl'],
+          startMonth: 1, endMonth: 8, activeModule: 1,
+          topTab: 'overview', hoveredIndicator: null, hoverTipStyle: { left: '0px', top: '0px' }, selected: null, charts: []
+        }
+      },
+      computed: {
+        hasDisplayData: function () { return this.selectedDepartment === '全院' && this.hasFullPeriod() },
+        rankingRows: function () { var descending = this.rankOrder === 'desc'; return this.rankingDepartments.slice().sort(function (a, b) { return descending ? b.value - a.value : a.value - b.value }) },
+        indicatorTotal: function () { var self = this; return this.modules.reduce(function (total, module) { return total + self.regularIndicators(module).length }, 0) },
+        periodLabel: function () {
+          if (!this.selMonths.length) return '未选择时间范围'
+          var ordered = this.selMonths.slice().sort()
+          var start = ordered[0], end = ordered[ordered.length - 1]
+          return start.slice(0, 4) + '-' + Number(start.slice(5)) + '月' + (start === end ? '' : '～' + Number(end.slice(5)) + '月')
+        }
       },
       mounted: function () {
         var self = this
-        this.$nextTick(function () { self.initCharts(); self.observeModules() })
+        this.$nextTick(function () { self.updateStickyGeometry(); self.initCharts(); self.updateActiveModule() })
+        window.addEventListener('scroll', this.updateActiveModule, { passive: true })
         window.addEventListener('resize', this.resizeCharts)
+        window.addEventListener('resize', this.updateStickyGeometry)
+        window.addEventListener('resize', this.updateActiveModule)
       },
-      beforeDestroy: function () { window.removeEventListener('resize', this.resizeCharts) },
+      beforeDestroy: function () { window.removeEventListener('scroll', this.updateActiveModule); window.removeEventListener('resize', this.resizeCharts); window.removeEventListener('resize', this.updateStickyGeometry); window.removeEventListener('resize', this.updateActiveModule) },
       methods: {
-        hasFullPeriod: function(){return this.selMonths.length===8 && window.demoAllMonths.every(m=>this.selMonths.includes(m))},
+        rankChange: function (dept, index) {
+          var descending = this.rankOrder === 'desc'
+          var lastOrder = this.rankingDepartments.slice().sort(function (a, b) { return descending ? b.lastValue - a.lastValue : a.lastValue - b.lastValue })
+          return lastOrder.findIndex(function (item) { return item.name === dept.name }) - index
+        },
+        showIndicatorTip: function (kpi, event) { this.hoveredIndicator = kpi; this.moveIndicatorTip(event) },
+        moveIndicatorTip: function (event) {
+          if (!this.hoveredIndicator || !event) return
+          var width = 390, height = 250, gap = 16
+          var left = Math.min(event.clientX + gap, window.innerWidth - width - 12)
+          var top = event.clientY + gap
+          if (top + height > window.innerHeight) top = event.clientY - height - gap
+          this.hoverTipStyle = { left: Math.max(12, left) + 'px', top: Math.max(12, top) + 'px' }
+        },
+        hideIndicatorTip: function () { this.hoveredIndicator = null },
+        redrawCharts: function () {
+          this.charts.forEach(function (chart) { chart.dispose() })
+          this.charts = []
+          this.$nextTick(this.initCharts)
+        },
+        selectDepartment: function (path) {
+          this.selectedDepartment = path && path.length ? path[path.length - 1] : '全院'
+          this.$refs.deptSelect.blur()
+          this.redrawCharts()
+        },
+        hasFullPeriod: function(){return this.selMonths.length===1 && this.selMonths[0]==='2026-07'},
         selectPeriod: async function(val) {
           if(new Set(val.map(function(m){return m.slice(0,4)})).size>1) {
             try { await this.$confirm('只能在同一年份内筛选时间，是否切换年份?', '提示', {closeOnClickModal:false,closeOnPressEscape:false}); var old=this.acceptedMonths[0].slice(0,4); val=val.filter(function(m){return m.slice(0,4)!==old}); }
@@ -545,12 +787,26 @@
           this.selMonths=val;this.acceptedMonths=val.slice();
           this.charts.forEach(function(c){c.dispose()});this.charts=[];this.$nextTick(this.initCharts);
         },
-        regularIndicators: function (module) { var self = this; return module.indicatorCodes.map(function (code) { return self.indicators[code] }).filter(function (item) { return item && item.type !== 'bar-supplement' }) },
-        moduleDescription: function (id) { return ['住院收治、查房、护理与交接查对执行情况', '会诊响应、急危重抢救及危急值闭环管理', '疑难病例与死亡病例讨论质量', '术前讨论、手术安全及分级管理质量', '抗菌药物、临床用血与新技术准入管理'][id - 1] },
+        regularIndicators: function (module) {
+          var self = this
+          var items = module.indicatorCodes.map(function (code) { return self.indicators[code] }).filter(function (item) { return item && item.type !== 'bar-supplement' })
+          return items.sort(function (a, b) {
+            if (module.id === 1) return (a.direction === 'negative' ? 0 : 1) - (b.direction === 'negative' ? 0 : 1)
+            if (module.id === 4) {
+              var order = { '术前讨论制度': 0, '手术安全核查制度': 1, '手术分级管理制度': 2 }
+              return order[a.subSystem] - order[b.subSystem]
+            }
+            var aRank = a.type === 'multi-value' ? 2 : a.direction === 'positive' ? 0 : 1
+            var bRank = b.type === 'multi-value' ? 2 : b.direction === 'positive' ? 0 : 1
+            return aRank - bRank
+          })
+        },
         directionText: function (direction) { return direction === 'positive' ? '↑ 越高越好' : direction === 'negative' ? '↓ 越低越好' : '↔ 监测比较' },
-        displayValue: function (kpi) { return kpi.value === null || kpi.value === undefined ? '--' : (kpi.unit === '' ? Number(kpi.value).toFixed(3) : kpi.type === 'ratio' ? Number(kpi.value).toFixed(2) : Number(kpi.value).toFixed(1)) },
+        displayValue: function (kpi) { if (kpi.value === null || kpi.value === undefined) return '--'; if (kpi.code === 'ywbmzztldswblyfsjfdswblbz') return (kpi.num / kpi.den * 100).toFixed(1); return kpi.unit === '' ? Number(kpi.value).toFixed(3) : kpi.type === 'ratio' ? Number(kpi.value).toFixed(2) : Number(kpi.value).toFixed(1) },
+        displayUnit: function (kpi) { return kpi.code === 'ywbmzztldswblyfsjfdswblbz' ? '%' : (kpi.unit || '') },
         unitOf: function (kpi) { return kpi.type === 'ratio' ? '倍' : '%' },
-        signed: function (value) { return Number.isFinite(value) ? (value > 0 ? '+' : '') + value.toFixed(1) + ' 个百分点' : '—' },
+        signed: function (value) { return Number.isFinite(value) ? (value > 0 ? '+' : '') + value.toFixed(1) + '%' : '—' },
+        deltaArrow: function (value) { return !Number.isFinite(value) || value === 0 ? '—' : value > 0 ? '↑' : '↓' },
         fractionLabels: function(kpi) { return [kpi.numeratorLabel, kpi.denominatorLabel] },
         changePeriod: function(source) {
           if(this.startMonth > this.endMonth) { if(source === 'start') this.endMonth = this.startMonth; else this.startMonth = this.endMonth }
@@ -570,10 +826,12 @@
           }); this.indicators=next; this.selected=null; this.charts.forEach(function(c){c.dispose()}); this.charts=[]; this.$nextTick(this.initCharts)
         },
         deltaClass: function (kpi, delta) { var isGood = (kpi.direction === 'positive' && delta >= 0) || (kpi.direction === 'negative' && delta <= 0); return isGood ? 'good' : 'bad' },
-        feedbackWord: function (kpi, delta) { if (!Number.isFinite(delta)) return ''; if (delta === 0) return '持平'; return this.deltaClass(kpi, delta) === 'good' ? '改善' : '待关注' },
         visualClass: function (kpi, index, module) {
-          var kind = kpi.status === 'offline' ? 'visual-offline' : kpi.type === 'fraction' ? 'visual-coverage' : kpi.type === 'ratio' ? 'visual-comparison' : kpi.type === 'multi-value' ? 'visual-response' : 'visual-ring'
-          return [kind, module.id === 1 && index === 0 ? 'visual-feature' : ''].join(' ')
+          var kind = kpi.status === 'offline' ? 'visual-offline' : kpi.type === 'fraction' ? 'visual-coverage' : kpi.type === 'ratio' ? 'visual-comparison' : kpi.type === 'multi-value' ? 'visual-response' : kpi.direction === 'negative' ? 'visual-risk' : 'visual-ring'
+          var group = ''
+          if (module.id === 3) group = kpi.type === 'fraction' ? 'ledger-card' : 'discussion-card'
+          if (module.id === 4) group = kpi.subSystem === '术前讨论制度' ? 'procedure-card' : kpi.subSystem === '手术安全核查制度' ? 'safety-card' : 'grade-card'
+          return kind + ' ' + group
         },
         ringStyle: function (kpi) {
           var value = Math.max(0, Math.min(100, Number(kpi.value) || 0))
@@ -582,35 +840,65 @@
         },
         responseWidth: function (value) { return Math.max(10, Math.min(100, Number(value) / 15 * 100)) + '%' },
         ratioWidth: function (kpi, value) { var max = Math.max.apply(null, Object.keys(kpi.subValues).map(function (key) { return Number(kpi.subValues[key]) })); return (Number(value) / max * 100) + '%' },
-        scrollTo: function (anchor) { document.getElementById(anchor).scrollIntoView({ behavior: 'smooth', block: 'start' }) },
-        observeModules: function () {
-          var self = this
-          var observer = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) self.activeModule = Number(entry.target.id.replace('module-', '')) }) }, { rootMargin: '-28% 0px -62% 0px' })
-          this.modules.forEach(function (module) { var target = document.getElementById(module.anchor); if (target) observer.observe(target) })
+        stickyOffset: function () {
+          var header = document.querySelector('.project-header'), context = document.querySelector('.overview-context')
+          return (header ? header.offsetHeight : 64) + (context ? context.offsetHeight : 0) + 18
+        },
+        updateStickyGeometry: function () {
+          var context = document.querySelector('.overview-context')
+          if (context) this.$el.style.setProperty('--overview-height', context.offsetHeight + 'px')
+        },
+        scrollTo: function (anchor) {
+          var target = document.getElementById(anchor)
+          if (!target) return
+          this.activeModule = anchor === 'insights' ? 6 : Number(anchor.replace('module-', ''))
+          window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - this.stickyOffset(), behavior: 'smooth' })
+        },
+        updateActiveModule: function () {
+          var threshold = this.stickyOffset() + 16, current = this.modules[0] ? this.modules[0].id : 1
+          this.modules.forEach(function (module) {
+            var target = document.getElementById(module.anchor)
+            if (target && target.getBoundingClientRect().top <= threshold) current = module.id
+          })
+          var insights = document.getElementById('insights')
+          var reachedBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8
+          if (insights && (insights.getBoundingClientRect().top <= threshold || (reachedBottom && insights.getBoundingClientRect().top < window.innerHeight))) current = 6
+          this.activeModule = current
         },
         resizeCharts: function () { this.charts.forEach(function (chart) { chart.resize() }) },
         initCharts: function () {
           if (!window.echarts) return
           var text = '#71829e', axis = '#cbd9ea', split = '#e9f0f8', grid = { left: 42, right: 28, top: 38, bottom: 33 }
           var volume = echarts.init(document.getElementById('volumeChart'))
-          volume.setOption({ color: ['#376def', '#1db88a', '#8066dc', '#e99a42'], tooltip: { trigger: 'axis' }, legend: { top: 4, textStyle: { color: text } }, grid: grid, xAxis: { type: 'category', data: window.supplementBarData.months, axisLine: { lineStyle: { color: axis } }, axisLabel: { color: text } }, yAxis: { type: 'value', splitLine: { lineStyle: { color: split } }, axisLabel: { color: text } }, series: window.supplementBarData.series.map(function (item) { return { name: item.name, type: 'bar', barMaxWidth: 28, data: item.data, emphasis: { focus: 'series' } } }) })
-          var ranking = echarts.init(document.getElementById('rankingChart'))
-          var ranks = window.deptRanking.slice().reverse()
-          ranking.setOption({ color: ['#376def', '#74c7ae'], tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: function (params) { return params[0].name + '<br/>本期：' + Math.abs(params[0].value) + '<br/>同期：' + params[1].value } }, legend: { top: 5, data: ['本期综合得分', '同期综合得分'], textStyle: { color: text } }, grid: { left: 82, right: 45, top: 39, bottom: 22 }, xAxis: { type: 'value', min: -100, max: 100, axisLabel: { color: text, formatter: function (v) { return Math.abs(v) } }, splitLine: { lineStyle: { color: split } } }, yAxis: { type: 'category', data: ranks.map(function (x) { return x.name }), axisLabel: { color: text }, axisLine: { lineStyle: { color: axis } } }, series: [{ name: '本期综合得分', type: 'bar', data: ranks.map(function (x) { return -x.value }), barMaxWidth: 13 }, { name: '同期综合得分', type: 'bar', data: ranks.map(function (x) { return x.lastValue }), barMaxWidth: 13 }] })
           var trend = echarts.init(document.getElementById('trendChart'))
-          var trendSeries = window.trendData.series.map(function (item, index) { return { name: item.name, type: 'line', smooth: true, showSymbol: false, yAxisIndex: 0, data: item.data, lineStyle: { width: 2 }, emphasis: { focus: 'series' } } })
-          trendSeries.unshift({ name: '入院人数', type: 'bar', yAxisIndex: 1, barMaxWidth: 23, itemStyle: { opacity: .52 }, data: window.supplementBarData.series[0].data })
-          trend.setOption({ color: ['#376def', '#1db88a', '#8066dc', '#e99a42', '#d870a6', '#4d9ee9'], tooltip: { trigger: 'axis' }, legend: { top: 4, textStyle: { color: text }, itemWidth: 13, itemHeight: 8 }, grid: { left: 42, right: 44, top: 50, bottom: 32 }, xAxis: { type: 'category', data: window.trendData.months, axisLine: { lineStyle: { color: axis } }, axisLabel: { color: text } }, yAxis: [{ type: 'value', name: '综合得分', min: 70, max: 100, nameTextStyle: { color: text }, axisLabel: { color: text }, splitLine: { lineStyle: { color: split } } }, { type: 'value', name: '入院人数', nameTextStyle: { color: text }, axisLabel: { color: text }, splitLine: { show: false } }], series: trendSeries })
-          var start=this.startMonth-1, end=this.endMonth
-          volume.setOption({xAxis:{data:window.supplementBarData.months.slice(start,end)},series:window.supplementBarData.series.map(function(s){return {data:s.data.slice(start,end)}})})
-          trend.setOption({xAxis:{data:window.trendData.months.slice(start,end)},series:trendSeries.map(function(s){return {data:s.data.slice(start,end)}})})
-          if(start !== 0 || end !== 8) ranking.setOption({graphic:[{type:'rect',left:0,top:0,shape:{width:2000,height:400},style:{fill:'#fff'},z:100},{type:'text',left:'center',top:'middle',style:{text:'所选时段暂无科室排名数据',fill:'#64748b',font:'14px sans-serif'},z:101}]})
-          this.charts = [volume, ranking, trend]
-          var chosen=this.selMonths;
-          var filter=function(data){return data.filter(function(v,i){return chosen.includes(window.demoAllMonths[i])})};
-          volume.setOption({xAxis:{data:filter(window.supplementBarData.months)},series:window.supplementBarData.series.map(function(s){return {data:filter(s.data)}})});
-          trend.setOption({xAxis:{data:filter(window.trendData.months)},series:trendSeries.map(function(s){return {data:filter(s.data)}})});
-          if(!this.hasFullPeriod()) ranking.setOption({graphic:[{type:'rect',left:0,top:0,shape:{width:2000,height:400},style:{fill:'#fff'},z:100},{type:'text',left:'center',top:'middle',style:{text:'所选时段暂无科室排名数据',fill:'#64748b',font:'14px sans-serif'},z:101}]});
+          var trendSource = window.trendData.series.find(function (item) { return item.name === this.trendSelection }, this) || window.trendData.series[0]
+          var chosen = this.selMonths
+          var filter = function (data) { return data.filter(function (value, index) { return chosen.includes(window.demoAllMonths[index]) }) }
+          var trendMonths = window.trendData.months.slice()
+          volume.setOption({
+            color: ['#376def', '#1db88a', '#8066dc', '#e99a42'],
+            tooltip: { trigger: 'axis' },
+            legend: { top: 4, textStyle: { color: text, fontSize: 13 } },
+            grid: { left: 54, right: 24, top: 54, bottom: 38 },
+            xAxis: { type: 'category', data: filter(window.supplementBarData.months), axisLine: { lineStyle: { color: axis } }, axisLabel: { color: text } },
+            yAxis: { type: 'value', splitLine: { lineStyle: { color: split } }, axisLabel: { color: text } },
+            series: window.supplementBarData.series.map(function (item) { return { name: item.name, type: 'bar', barMaxWidth: 28, data: filter(item.data), emphasis: { focus: 'series' } } })
+          })
+          trend.setOption({
+            color: ['#f8b55b'],
+            tooltip: { trigger: 'axis' },
+            legend: { bottom: 0, textStyle: { color: '#7a89a0', fontSize: 14 } },
+            grid: { left: 20, right: 36, top: 42, bottom: 54, containLabel: true },
+            xAxis: { name: '月', type: 'category', data: trendMonths, axisLabel: { color: '#8190a6', fontSize: 13 }, axisLine: { lineStyle: { color: '#c9d3e2' } } },
+            yAxis: { type: 'value', min: 70, max: 100, axisLabel: { color: '#8190a6', fontSize: 13 }, splitLine: { lineStyle: { type: 'dotted', color: '#e5ebf3' } } },
+            series: [{ name: trendSource.name, type: 'line', smooth: false, showSymbol: true, symbolSize: 6, lineStyle: { width: 3 }, data: trendSource.data.slice() }]
+          })
+          if (this.selectedDepartment !== '全院') {
+            var emptyText = { type: 'text', left: 'center', top: 'middle', style: { text: '该科室暂无演示数据', fill: '#8291a5', font: '16px sans-serif' }, z: 100 }
+            volume.setOption({ xAxis: { data: [] }, series: window.supplementBarData.series.map(function () { return { data: [] } }), graphic: emptyText })
+            trend.setOption({ xAxis: { data: [] }, series: [{ data: [] }], graphic: emptyText })
+          }
+          this.charts = [volume, trend]
         }
       }
     })
