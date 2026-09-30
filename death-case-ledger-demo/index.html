@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>死亡病例台账 · V1</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.6/lib/theme-chalk/index.css">
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.6/lib/index.js"></script>
+<style>
+/* =============================================================
+ * 全部样式 1:1 来自生产源码：
+ *   packages/public/layout/homeLayout/index.vue
+ *   packages/public/layout/homeLayout/headerBar/HeaderBar.vue
+ *   packages/public/layout/homeLayout/headerBar/Tabbar.vue
+ *   packages/public/layout/homeLayout/SideBar/index.vue
+ *   packages/public/layout/mainLayout/index.vue
+ *   packages/public/views/evaluation/dataBackfill/index.vue
+ * ============================================================= */
+*{box-sizing:border-box}
+[v-cloak]{display:none}
+ul{list-style:none;margin:0;padding:0}
+html,body{margin:0;padding:0;font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:#243650}
+
+/* —— home-layout —— */
+.home-layout{
+  position:relative;display:flex;flex-direction:column;overflow:hidden;
+  width:100vw;height:100vh;
+  background-color:#376def;
+  background-image:url('./assets/svg/bg_banner_1.svg');
+  background-repeat:no-repeat;background-position:0 0;
+  background-size:100vw 48.33vw;
+}
+.layout-bottom{display:flex;overflow:hidden;flex:1}
+.home-router-view-wrap{overflow:auto;flex:1}
+
+/* —— MainLayout.main-container（noRadius + noContentPadding） —— */
+.main-container{
+  height:100%;min-height:0;flex:1;background-color:#f7f9fa;
+  border-top-left-radius:0;   /* noRadius */
+  overflow-y:auto;
+  /* default-padding 已禁用，由 .data-backfill 提供 padding:20px */
+  display:flex;flex-direction:column;
+}
+
+/* —— layout-header —— */
+.layout-header{
+  position:relative;display:flex;justify-content:center;align-items:center;
+  padding-top:16px;padding-bottom:10px;min-height:35px;flex-shrink:0;
+}
+.header-left{position:absolute;top:0;bottom:0;left:0;display:inline-flex;align-items:center;padding-left:20px}
+.header-left .logo{display:block;width:28px;height:28px}
+.header-left .title{padding-left:10px;font-size:20px;color:#fff;font-weight:bold}
+.header-right{position:absolute;top:0;right:0;bottom:0;display:flex;align-items:center;padding-right:20px;cursor:default}
+.user-menu-btn{display:flex;align-items:center;font-size:14px;color:#fff}
+.user-menu-btn .avatar{
+  display:block;margin-right:6px;width:22px;height:22px;
+  background:url('./assets/svg/user.svg') no-repeat center/cover;
+}
+
+/* —— Tabbar —— */
+.tab-list{position:relative;display:flex;align-items:center}
+.tab-list .tab-item{line-height:27px;cursor:pointer}
+.tab-list .tab-item + .tab-item{margin-left:60px}
+.tab-list .tab-label{font-size:18px;font-weight:bold;color:#fff}
+.tab-list .indictor{position:absolute;top:100%;left:0;width:35px;height:3px;background:#fff;border-radius:2px;transition:left .3s ease}
+
+/* —— SideBar —— */
+.menu-list{
+  overflow-y:auto;width:200px;background-color:transparent;border:none;
+  flex-shrink:0;
+}
+.menu-list::-webkit-scrollbar{width:6px}
+.menu-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:3px}
+
+.menu-group-title{
+  min-height:44px;line-height:44px;font-size:16px;
+  background-color:transparent;color:#fff;cursor:pointer;
+  padding:0 20px;display:flex;align-items:center;justify-content:space-between;
+}
+.menu-group-title > span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu-group-title .chevron{flex-shrink:0;margin-left:8px}
+.menu-group-title:hover{background-color:rgba(255,255,255,.1)}
+.menu-group-title .chevron{font-size:12px;font-weight:bold;transition:transform .2s}
+.menu-group.expanded .chevron{transform:rotate(180deg)}
+.menu-group-items{max-height:0;overflow:hidden;transition:max-height .25s ease}
+.menu-group.expanded .menu-group-items{max-height:800px}
+.menu-item{
+  min-height:44px;line-height:44px;font-size:16px;
+  background-color:transparent;color:#fff;cursor:pointer;
+  padding:0 20px;display:flex;align-items:center;position:relative;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.menu-item:hover{background-color:rgba(255,255,255,.1)}
+.menu-item.active{z-index:10;color:#376def}
+.menu-item.active::before{
+  position:absolute;top:2px;right:10px;bottom:2px;left:0;z-index:-1;
+  display:block;background-color:#fff;content:'';
+  border-top-right-radius:30px;border-bottom-right-radius:30px;
+}
+
+/* —— data-backfill —— */
+.data-backfill{
+  display:flex;flex-direction:column;
+  flex:1;width:100%;height:100%;
+  padding:20px;box-sizing:border-box;overflow:hidden;
+}
+.data-backfill-header{
+  display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;row-gap:8px;
+  padding:16px 20px;background-color:#fff;
+  box-sizing:border-box;margin-bottom:16px;border-radius:10px;
+  flex-shrink:0;
+}
+.data-backfill-header > *{flex-shrink:0}
+.data-backfill-title{
+  font-size:16px;font-weight:600;color:#333;
+  margin-right:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;
+}
+/* Table tokens: public/assets/scss/variables.scss and tableResult.scss. */
+.table-container{flex:1;min-height:0;background:#fff;border-radius:10px;padding:10px;overflow:hidden;display:flex;flex-direction:column}
+.data-backfill-header{gap:10px;justify-content:flex-start}
+.data-backfill-title{margin:0 auto 0 0}
+.patient-search{width:220px!important;flex:1 0 220px!important;max-width:300px}
+.death-range{width:290px!important}
+.data-backfill-header .el-input__inner{height:36px;line-height:36px;border-color:#e6eaf0;border-radius:18px}
+.data-backfill-header .el-input__icon{line-height:36px}
+.data-backfill-header .el-range-editor{height:36px;border-radius:18px}
+.data-backfill-header .el-range-separator{width:24px;line-height:28px}
+.data-backfill-header .el-button{margin-left:0}
+.input-grid{flex:1;min-height:0;overflow:auto}
+.input-grid table{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;color:#333}
+.input-grid th,.input-grid td{padding:10px 12px;border-right:1px solid #fff;border-bottom:1px solid #fff;white-space:nowrap;text-align:left;font-weight:normal}
+.input-grid th{background:#ebeef2;position:sticky;top:0;z-index:1}
+.input-grid td{background:#f7f9fa}
+.input-grid tr:nth-child(even) td{background:#f2f5f7}
+.input-grid tr:hover td,.input-grid tr.selected td{background:#ecf5ff}
+.input-grid .selection-cell{width:54px;min-width:54px;text-align:center;position:sticky;left:0;z-index:1}
+.input-grid th.selection-cell{z-index:2}
+.selection-cell .el-radio{margin:0}.selection-cell .el-radio__label{display:none}
+.state-tag{display:inline-block;padding:0 8px;line-height:24px;border:1px solid;border-radius:4px;font-size:12px}
+.state-0{background:#f4f4f5;border-color:#e9e9eb;color:#909399}
+.state-1{background:#fef0f0;border-color:#fde2e2;color:#f56c6c}
+.state-2{background:#fdf6ec;border-color:#faecd8;color:#e6a23c}
+.table-footer{padding:12px 4px 2px;color:#666;font-size:13px}
+.description-cell{max-width:320px;overflow:hidden;text-overflow:ellipsis}
+.ledger-case-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 20px;padding:14px 16px;margin-bottom:22px;background:#f7f9fa;border-radius:4px}
+.ledger-case-info div{min-width:0;display:flex;gap:8px;line-height:22px}
+.ledger-case-info dt{flex:none;width:84px;color:#909399}
+.ledger-case-info dd{margin:0;min-width:0;overflow-wrap:anywhere;color:#333}
+.ledger-edit-dialog .el-dialog__body{max-height:calc(100vh - 180px);overflow-y:auto}
+@media(max-width:640px){.ledger-case-info{grid-template-columns:1fr}}
+.ledger-select-dept-input .el-input__inner{height:36px;border-color:#e7eaef;color:#333;border-radius:18px}
+.ledger-select-dept-input .suffix-icon{padding:10px;cursor:pointer;color:#bbb}
+.ledger-select-dept-input .suffix-icon:before{content:'\e6df';font-family:element-icons}
+.ledger-select-dept-input .suffix-icon:hover:before{content:'\e78d'}
+.overview-white-popper-class{background:#fff;border:0;border-radius:10px;box-shadow:0 3px 6px 1px #00000029}
+.overview-white-popper-class.no-horizontal-padding{padding-left:0;padding-right:0}
+.ledger-popover-header{margin-bottom:5px;padding:0 12px 12px;border-bottom:1px solid #ccc}
+.ledger-panel-container{display:flex;min-width:300px;height:276px}
+.ledger-menu-panel{display:flex;flex-direction:column;width:200px;height:100%;box-sizing:border-box}
+.ledger-menu-panel + .ledger-menu-panel{border-left:1px solid #ccc}
+.ledger-menu-list{overflow-y:auto;flex:1}
+.ledger-menu-item{display:flex;align-items:center;padding:4px 8px 4px 12px;color:#666;cursor:pointer}
+.ledger-menu-item .content{display:flex;align-items:center;flex:1;margin:10px 0}
+.ledger-menu-item .label{padding:0 4px;flex:1;font-size:14px}
+.ledger-menu-item .suffix{font-size:16px}
+.ledger-menu-item.checked .label,.ledger-menu-item.expanded{font-weight:bold}
+</style>
+</head>
+<body>
+<div id="app" v-cloak class="home-layout">
+
+<!-- ============= layout-header ============= -->
+<header class="layout-header">
+  <div class="header-left">
+    <img src="./assets/svg/logo1.svg" class="logo" alt="">
+    <h1 class="title">医疗质量安全核心制度指标管理平台</h1>
+  </div>
+
+  <ul class="tab-list">
+    <li class="tab-item"><span class="tab-label">全院分析</span></li>
+    <li class="tab-item"><span class="tab-label">报表中心</span></li>
+    <li class="indictor" :style="indicatorPos"></li>
+  </ul>
+
+  <div class="header-right">
+    <span class="user-menu-btn">
+      <i class="avatar"></i>
+      <span>{{ currentUser.name }}</span>
+    </span>
+  </div>
+</header>
+
+<!-- ============= layout-bottom ============= -->
+<div class="layout-bottom">
+
+  <!-- SideBar -->
+  <aside class="menu-list">
+    <div class="menu-group" :class="{expanded: expandedGroups.g1}">
+      <div class="menu-group-title" @click="toggleGroup('g1')">
+        <span>核心制度监测指标</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="menu-group-items">
+        <div class="menu-item">18项核心制度监测指标(临床)</div>
+        <div class="menu-item">18项核心制度监测指标(职能)</div>
+        <div class="menu-item">18项核心制度监测指标(时序横表)</div>
+        <div class="menu-item">18项核心制度监测指标(时序横表)(职能)</div>
+      </div>
+    </div>
+
+    <div class="menu-group" :class="{expanded: expandedGroups.g2}">
+      <div class="menu-group-title" @click="toggleGroup('g2')">
+        <span>三甲指标</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="menu-group-items">
+        <div class="menu-item">三甲指标 1</div>
+      </div>
+    </div>
+
+    <div class="menu-group" :class="{expanded: expandedGroups.g3}">
+      <div class="menu-group-title" @click="toggleGroup('g3')">
+        <span>核心制度监测指标明细报表</span>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="menu-group-items">
+        <div class="menu-item">明细报表 1</div>
+      </div>
+    </div>
+
+    <div class="menu-item active">死亡病例台账</div>
+    <div class="menu-item">指标库管理</div>
+    <div class="menu-item">我的下载</div>
+  </aside>
+
+  <!-- 右侧路由区：home-router-view-wrap + MainLayout.main-container + data-backfill -->
+  <div class="home-router-view-wrap">
+    <div class="main-container">
+      <div class="data-backfill">
+
+          <header class="data-backfill-header">
+            <h2 class="data-backfill-title">死亡病例台账</h2>
+            <el-input v-model="filters.patientName" placeholder="请输入患者姓名 / 登记号" prefix-icon="el-icon-search" clearable class="patient-search" aria-label="患者姓名或登记号"></el-input>
+            <el-date-picker v-model="filters.deathRange" type="daterange" range-separator="至" start-placeholder="死亡开始日期" end-placeholder="死亡结束日期" value-format="yyyy-MM-dd" class="death-range" unlink-panels></el-date-picker>
+            <select-dept ref="deptFilter" type="white" :dept-data="departmentOptions" :width="170" placeholder="请选择科室" @change="onDeptChange"></select-dept>
+            <el-select v-model="filters.disputeFilter" style="width:130px" aria-label="纠纷状态">
+              <el-option label="全部状态" value="all"></el-option>
+              <el-option v-for="(label, key) in statusLabels" :key="key" :label="label" :value="String(key)"></el-option>
+            </el-select>
+            <el-button plain round size="small" @click="openFieldDialog">字段设置</el-button>
+            <el-button type="primary" plain round size="small" @click="openEditor">编辑台账</el-button>
+          </header>
+          <div class="table-container">
+            <div class="input-grid">
+              <table v-if="filteredRows.length">
+                <thead><tr>
+                  <th class="selection-cell">选择</th>
+                  <th v-for="col in displayedColumns" :key="col.key">{{ col.title }}</th>
+                </tr></thead>
+                <tbody><tr v-for="row in filteredRows" :key="row.id" :class="{selected: selectedId === row.id}">
+                  <td class="selection-cell"><el-radio v-model="selectedId" :label="row.id" :aria-label="'选择病例：' + row.patientName + '，' + row.registrationNo"><span class="sr-only">选择 {{ row.patientName }}</span></el-radio></td>
+                  <td v-for="col in displayedColumns" :key="col.key" :class="{'description-cell': col.key === 'disputeDescription'}" :title="col.key === 'disputeDescription' ? row.disputeDescription : null">
+                    <span v-if="col.key === 'isDispute'" class="state-tag" :class="'state-' + row.isDispute">{{ statusLabels[row.isDispute] }}</span>
+                    <template v-else>{{ row[col.key] || '—' }}</template>
+                  </td>
+                </tr></tbody>
+              </table>
+              <div v-else style="padding:80px 20px;text-align:center;color:#909399">未找到匹配的死亡病例</div>
+            </div>
+            <div class="table-footer">共 {{ filteredRows.length }} 条<span v-if="selectedId !== null">，已选择 1 条</span></div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============= 编辑台账弹窗 ============= -->
+<el-dialog title="编辑台账" custom-class="ledger-edit-dialog" :visible.sync="editor.visible" width="680px" :close-on-click-modal="false" @closed="resetEditor">
+  <dl v-if="editor.row" class="ledger-case-info">
+    <div><dt>登记号</dt><dd>{{ editor.row.registrationNo }}</dd></div>
+    <div><dt>患者姓名</dt><dd>{{ editor.row.patientName }}</dd></div>
+    <div><dt>就诊类型</dt><dd>{{ editor.row.visitType }}</dd></div>
+    <div><dt>就诊科室</dt><dd>{{ editor.row.visitDeptName }}</dd></div>
+    <div><dt>就诊日期</dt><dd>{{ editor.row.visitDateText }}</dd></div>
+    <div><dt>死亡时间</dt><dd>{{ editor.row.deathTimeText }}</dd></div>
+    <div><dt>讨论记录时间</dt><dd>{{ editor.row.discussionRecordTimeText }}</dd></div>
+    <div><dt>讨论医师</dt><dd>{{ editor.row.discussionPhysicianName }}</dd></div>
+    <div><dt>主持人</dt><dd>{{ editor.row.discussionHostName }}</dd></div>
+  </dl>
+  <el-form v-if="editor.row" ref="ledgerForm" :model="editor.form" :rules="editorRules" label-width="90px">
+    <el-form-item label="是否纠纷" prop="isDispute">
+      <el-radio-group v-model="editor.form.isDispute" @change="onStatusChange">
+        <el-radio :label="1">标记</el-radio>
+        <el-radio :label="2" :disabled="editor.row.isDispute === 0">撤销</el-radio>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item label="说明" prop="disputeDescription">
+      <el-input v-model="editor.form.disputeDescription" type="textarea" :rows="4" maxlength="500" show-word-limit
+        :placeholder="editor.form.isDispute === 2 ? '请输入撤销说明' : '请输入标记说明'"></el-input>
+    </el-form-item>
+  </el-form>
+  <span slot="footer"><el-button @click="closeEditor">取消</el-button><el-button type="primary" :disabled="!editorDirty" @click="saveLedger">保存</el-button></span>
+</el-dialog>
+
+<!-- ============= 字段设置弹框 ============= -->
+<el-dialog title="字段设置" :visible.sync="dialogSelectField.visible" width="420px">
+  <div style="font-size:12px;color:#8a98aa;margin-bottom:12px">
+    选择表格中显示的列（基础字段不可隐藏）
+  </div>
+  <el-checkbox-group v-model="draftColumns">
+    <div v-for="col in allColumns" :key="col.key"
+         style="padding:8px 0;border-bottom:1px dashed #f1f6fc">
+      <el-checkbox :label="col.key" :disabled="col.fixed">
+        {{ col.title }}
+        <span v-if="col.fixed" style="color:#8a98aa;font-size:11px;margin-left:6px">（基础字段）</span>
+      </el-checkbox>
+    </div>
+  </el-checkbox-group>
+  <span slot="footer">
+    <el-button @click="dialogSelectField.visible=false">取消</el-button>
+    <el-button type="primary" @click="applyFields">确定</el-button>
+  </span>
+</el-dialog>
+
+</div>
+
+<script src="./original/mockData.js"></script>
+<script src="./assets/select-dept.js"></script>
+<script>
+const ledgerColumns = [
+  ['registrationNo','登记号',true],['patientName','患者姓名',true],['visitType','就诊类型',true],
+  ['visitDeptName','就诊科室',true],['visitDateText','就诊日期',true],['deathTimeText','死亡时间',true],
+  ['discussionRecordTimeText','讨论记录时间'],['discussionPhysicianName','讨论医师'],['discussionHostName','主持人'],
+  ['isDispute','是否纠纷'],['disputeDescription','说明']
+].map(([key,title,fixed]) => ({key,title,fixed:!!fixed}));
+const formatSavedTime = date => window.fmtDate(date) + ' ' + [date.getHours(), date.getMinutes(), date.getSeconds()].map(n => String(n).padStart(2,'0')).join(':');
+// Demo department hierarchy only; the selector uses the production component logic.
+const departmentOptions = ['临床科室','医技科室'].map((name,index) => ({
+  deptCode: 'group-' + index, deptName: name, hasPerm:true,
+  children: window.deptList.filter(d => index === 1 ? ['anesthesia','imaging'].includes(d.code) : !['anesthesia','imaging'].includes(d.code)).map(d => ({
+    deptCode:d.code,deptName:d.name,hasPerm:true,
+    children:[1,2].map(n => ({deptCode:d.code+'-ward-'+n,deptName:d.name+n+'病区',hasPerm:true}))
+  }))
+}));
+new Vue({
+  el:'#app',
+  data() {
+    return {
+      currentUser:{id:1011,name:'医务部-张三'},
+      indicatorPos:{left:'151px'}, expandedGroups:{g1:true,g2:false,g3:false},
+      statusLabels:{0:'未标记',1:'已标记',2:'已撤销'},
+      departmentOptions,
+      allRows:window.toTableRows(window.deathCases).map((row,index) => ({
+        ...row,visitWardCode:row.visitDeptCode+'-ward-'+(index % 2 + 1),
+        disputeMarkTimeText:row.disputeMarkTime ? formatSavedTime(row.disputeMarkTime) : '—'
+      })),
+      filters:{patientName:'',deathRange:['2026-08-01','2026-09-28'],deptCodes:[],disputeFilter:'all'},
+      selectedId:null,
+      allColumns:ledgerColumns,visibleColumns:ledgerColumns.map(c=>c.key),draftColumns:[],
+      dialogSelectField:{visible:false},
+      editor:{visible:false,row:null,form:{isDispute:1,disputeDescription:''}},
+      editorRules:{
+        isDispute:[{validator:(rule,value,callback)=>callback([1,2].includes(value) ? undefined : new Error('请选择已标记后保存')),trigger:'change'}],
+        disputeDescription:[{validator:(rule,value,callback)=>callback(value && value.trim() ? undefined : new Error(this.editor.form.isDispute === 2 ? '请填写撤销说明' : '请填写纠纷说明')),trigger:'blur'}]
+      }
+    }
+  },
+  computed:{
+    editorDirty(){
+      const {row,form}=this.editor;
+      if(!row || ![1,2].includes(form.isDispute))return false;
+      return form.isDispute!==row.isDispute ||
+        form.disputeDescription.trim()!==(row.disputeDescription || '').trim();
+    },
+    displayedColumns(){return this.allColumns.filter(c=>this.visibleColumns.includes(c.key))},
+    filteredRows(){
+      const f=this.filters;const [start,end]=f.deathRange || [];const kw=f.patientName.trim().toLowerCase();
+      return this.allRows.filter(r=>{
+        if(kw && !(r.patientName.includes(kw)||r.registrationNo.toLowerCase().includes(kw)))return false;
+        const date=window.fmtDate(r.deathTime);
+        if(start && date<start || end && date>end)return false;
+        if(f.deptCodes.length && !f.deptCodes.includes(r.visitDeptCode) && !f.deptCodes.includes(r.visitWardCode))return false;
+        return f.disputeFilter==='all' || r.isDispute===Number(f.disputeFilter);
+      })
+    }
+  },
+  watch:{filteredRows(rows){if(!rows.some(r=>r.id===this.selectedId))this.selectedId=null}},
+  methods:{
+    toggleGroup(key){this.expandedGroups[key]=!this.expandedGroups[key]},
+    onDeptChange(value){this.filters.deptCodes=(value.deptList || []).map(d=>d.deptCode)},
+    openFieldDialog(){this.draftColumns=this.visibleColumns.slice();this.dialogSelectField.visible=true},
+    applyFields(){this.visibleColumns=this.allColumns.filter(c=>c.fixed||this.draftColumns.includes(c.key)).map(c=>c.key);this.dialogSelectField.visible=false},
+    openEditor(){
+      const row=this.filteredRows.find(r=>r.id===this.selectedId);
+      if(!row){this.$message.warning('请先勾选一条病例');return}
+      this.editor={visible:true,row,form:{isDispute:row.isDispute === 0 ? null : row.isDispute,disputeDescription:row.disputeDescription || ''}};
+      this.$nextTick(()=>this.$refs.ledgerForm.clearValidate());
+    },
+    onStatusChange(){
+      this.editor.form.disputeDescription=this.editor.form.isDispute===this.editor.row.isDispute ? this.editor.row.disputeDescription : '';
+      this.$nextTick(()=>this.$refs.ledgerForm.clearValidate());
+    },
+    closeEditor(){this.editor.visible=false;this.selectedId=null},
+    resetEditor(){this.editor.row=null;this.selectedId=null},
+    saveLedger(){
+      if(!this.editorDirty)return;
+      this.$refs.ledgerForm.validate(valid=>{
+        if(!valid)return;
+        const row=this.editor.row;const now=new Date();
+        row.isDispute=this.editor.form.isDispute;
+        row.disputeDescription=this.editor.form.disputeDescription.trim();
+        row.disputeMarkTime=now;row.disputeUpdatedAt=now;
+        row.disputeMarkTimeText=formatSavedTime(now);
+        row.disputeMarkUserId=this.currentUser.id;row.disputeMarkUserName=this.currentUser.name;
+        this.closeEditor();this.$message.success('台账已保存');
+      });
+    }
+  }
+});
+</script>
+</body>
+</html>
