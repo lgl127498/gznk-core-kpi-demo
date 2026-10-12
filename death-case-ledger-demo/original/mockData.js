@@ -94,6 +94,7 @@ function fmtDateTime(d) {
 // 字段说明：
 //   id                   主键
 //   registrationNo       登记号（HIS 主键）
+//   medicalRecordNo      病案号（基础字段，由梓彤提供；mock 暂用登记号占位）
 //   patientName          患者姓名
 //   visitType            就诊类型（门诊 / 住院 / 急诊）
 //   visitDate            就诊日期
@@ -108,6 +109,7 @@ function fmtDateTime(d) {
 //   disputeMarkUserId    纠纷标记人 id
 //   disputeDescription   纠纷说明
 //   disputeUpdatedAt     纠纷更新时间
+//   disputeRequestDate   家属提出纠纷诉求日期（基础字段，由梓彤提供）
 const deathCases = [
   // —— 住院死亡，已讨论，已标记纠纷（典型场景） ——
   {
@@ -363,6 +365,15 @@ const deathCases = [
 function toTableRows(list) {
   return list.map(item => ({
     ...item,
+    // 病案号：基础字段来自 HIS（梓彤提供）；mock 暂以登记号占位
+    medicalRecordNo:             item.medicalRecordNo || ('MR' + item.registrationNo.slice(-7)),
+    medicalRecordNoText:         item.medicalRecordNo || ('MR' + item.registrationNo.slice(-7)),
+    // 家属提出纠纷诉求日期：基础字段（梓彤提供）；mock 暂以纠纷标记时间减 1~3 天
+    disputeRequestDate:          item.disputeRequestDate
+                                || (item.disputeMarkTime ? new Date(item.disputeMarkTime.getTime() - 86400000 * (1 + (item.id % 3))) : null),
+    disputeRequestDateText:      item.disputeRequestDate
+                                ? fmtDate(item.disputeRequestDate)
+                                : (item.disputeMarkTime ? fmtDate(new Date(item.disputeMarkTime.getTime() - 86400000 * (1 + (item.id % 3)))) : '—'),
     visitDateText:               fmtDate(item.visitDate),
     deathTimeText:               fmtDateTime(item.deathTime),
     discussionRecordTimeText:    item.discussionRecordTime ? fmtDate(item.discussionRecordTime) : '—',

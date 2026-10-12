@@ -274,7 +274,7 @@ html,body{margin:0;padding:0;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Pin
       <div class="data-backfill">
 
           <header class="data-backfill-header">
-            <el-input v-model="filters.patientName" placeholder="请输入患者姓名 / 登记号" prefix-icon="el-icon-search" clearable class="patient-search" aria-label="患者姓名或登记号"></el-input>
+            <el-input v-model="filters.keyword" placeholder="姓名 / 登记号 / 病案号" prefix-icon="el-icon-search" clearable class="patient-search" aria-label="患者姓名、登记号或病案号"></el-input>
 
             <div class="filter-group filter-group--push">
               <span class="filter-label">科室</span>
@@ -284,6 +284,16 @@ html,body{margin:0;padding:0;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Pin
             <div class="filter-group">
               <span class="filter-label">死亡时间</span>
               <el-date-picker v-model="filters.deathRange" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd" class="death-range" unlink-panels></el-date-picker>
+            </div>
+
+            <div class="filter-group">
+              <span class="filter-label">就诊类型</span>
+              <el-select v-model="filters.visitType" style="width:96px" aria-label="就诊类型">
+                <el-option label="全部" value="all"></el-option>
+                <el-option label="门诊" value="门诊"></el-option>
+                <el-option label="住院" value="住院"></el-option>
+                <el-option label="急诊" value="急诊"></el-option>
+              </el-select>
             </div>
 
             <div class="filter-group">
@@ -366,11 +376,13 @@ html,body{margin:0;padding:0;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Pin
 <el-dialog title="病例详情" custom-class="ledger-edit-dialog" :visible.sync="detail.visible" width="780px" :close-on-click-modal="false">
   <dl v-if="detail.row" class="ledger-case-info">
     <div><dt>登记号</dt><dd>{{ detail.row.registrationNo }}</dd></div>
+    <div><dt>病案号</dt><dd>{{ detail.row.medicalRecordNoText }}</dd></div>
     <div><dt>患者姓名</dt><dd>{{ detail.row.patientName }}</dd></div>
     <div><dt>就诊类型</dt><dd>{{ detail.row.visitType }}</dd></div>
     <div><dt>就诊科室</dt><dd>{{ detail.row.visitDeptName }}</dd></div>
     <div><dt>就诊日期</dt><dd>{{ detail.row.visitDateText }}</dd></div>
     <div><dt>死亡时间</dt><dd>{{ detail.row.deathTimeText }}</dd></div>
+    <div><dt>家属提出纠纷诉求日期</dt><dd>{{ detail.row.disputeRequestDateText }}</dd></div>
     <div><dt>讨论记录时间</dt><dd>{{ detail.row.discussionRecordTimeText }}</dd></div>
     <div><dt>讨论医师</dt><dd>{{ detail.row.discussionPhysicianName }}</dd></div>
     <div><dt>主持人</dt><dd>{{ detail.row.discussionHostName }}</dd></div>
@@ -402,8 +414,9 @@ html,body{margin:0;padding:0;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Pin
     <div><b>当前筛选范围</b></div>
     <div>· 死亡时间：{{ filters.deathRange[0] || '不限' }} 至 {{ filters.deathRange[1] || '不限' }}</div>
     <div>· 科室：{{ filters.deptCodes.length ? '已选 ' + filters.deptCodes.length + ' 个' : '全部科室' }}</div>
-    <div>· 纠纷状态：{{ filters.disputeFilter === 'all' ? '全部状态' : statusLabels[filters.disputeFilter] }}</div>
-    <div>· 搜索关键词：{{ filters.patientName || '无' }}</div>
+    <div>· 就诊类型：{{ filters.visitType === 'all' ? '全部类型' : filters.visitType }}</div>
+    <div>· 状态：{{ filters.disputeFilter === 'all' ? '全部状态' : statusLabels[filters.disputeFilter] }}</div>
+    <div>· 搜索关键词：{{ filters.keyword || '无' }}</div>
     <div>· 命中记录：<b style="color:#376def">{{ filteredRows.length }} 条</b></div>
   </div>
   <ul class="export-options">
@@ -423,9 +436,10 @@ html,body{margin:0;padding:0;font:14px/1.6 -apple-system,BlinkMacSystemFont,"Pin
 <script src="./assets/select-dept.js"></script>
 <script>
 const ledgerColumns = [
-  ['registrationNo','登记号',true],['patientName','患者姓名',true],['visitType','就诊类型',true],
+  ['registrationNo','登记号',true],['medicalRecordNoText','病案号'],['patientName','患者姓名',true],['visitType','就诊类型',true],
   ['visitDeptName','就诊科室',true],['visitDateText','就诊日期',true],['deathTimeText','死亡时间',true],
-  ['discussionRecordTimeText','讨论记录时间'],['discussionPhysicianName','讨论医师'],['discussionHostName','主持人'],
+  ['disputeRequestDateText','家属提出纠纷诉求日期'],['discussionRecordTimeText','讨论记录时间'],
+  ['discussionPhysicianName','讨论医师'],['discussionHostName','主持人'],
   ['isDispute','是否纠纷'],['disputeDescription','说明']
 ].map(([key,title,fixed]) => ({key,title,fixed:!!fixed}));
 
@@ -493,7 +507,7 @@ new Vue({
         disputeMarkTimeText:row.disputeMarkTime ? formatSavedTime(row.disputeMarkTime) : '—',
         editHistory:[]
       })),
-      filters:{patientName:'',deathRange:['2026-08-01','2026-09-28'],deptCodes:[],disputeFilter:'all'},
+      filters:{keyword:'',deathRange:['2026-08-01','2026-09-28'],deptCodes:[],visitType:'all',disputeFilter:'all'},
       allColumns:ledgerColumns,displayedColumns:ledgerColumns,
       currentPage:1, pageSize:20,
       editor:{visible:false,row:null,form:{isDispute:1,disputeDescription:''}},
@@ -513,12 +527,17 @@ new Vue({
         form.disputeDescription.trim()!==(row.disputeDescription || '').trim();
     },
     filteredRows(){
-      const f=this.filters;const [start,end]=f.deathRange || [];const kw=f.patientName.trim().toLowerCase();
+      const f=this.filters;const [start,end]=f.deathRange || [];const kw=f.keyword.trim().toLowerCase();
       const rows=this.allRows.filter(r=>{
-        if(kw && !(r.patientName.includes(kw)||r.registrationNo.toLowerCase().includes(kw)))return false;
+        if(kw && !(
+          r.patientName.toLowerCase().includes(kw) ||
+          r.registrationNo.toLowerCase().includes(kw) ||
+          (r.medicalRecordNo || '').toLowerCase().includes(kw)
+        ))return false;
         const date=window.fmtDate(r.deathTime);
         if(start && date<start || end && date>end)return false;
         if(f.deptCodes.length && !f.deptCodes.includes(r.visitDeptCode) && !f.deptCodes.includes(r.visitWardCode))return false;
+        if(f.visitType !== 'all' && r.visitType !== f.visitType) return false;
         return f.disputeFilter==='all' || r.isDispute===Number(f.disputeFilter);
       });
       return rows;
